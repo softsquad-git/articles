@@ -11,7 +11,7 @@ class Avatar extends Model
 
     protected $fillable = [
         'user_id',
-        '_src'
+        'src'
     ];
 
     public function user()
