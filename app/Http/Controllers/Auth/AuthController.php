@@ -1,0 +1,65 @@
+<?php
+
+namespace App\Http\Controllers\Auth;
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\RegisterRequest;
+use App\Services\Auth\AuthService;
+use Illuminate\Support\Facades\Auth;
+
+class AuthController extends Controller
+{
+    /**
+     * @var $service
+     */
+    private $service;
+
+    public function __construct(AuthService $service)
+    {
+        $this->service = $service;
+    }
+
+    public function register(RegisterRequest $request)
+    {
+        $userData = $request->only([
+            'email',
+            'password'
+        ]);
+        $dataSpecificUser = $request->only([
+            'name',
+            'last_name',
+            'birthday',
+            'number_phone',
+            'city',
+            'post_code',
+            'address',
+            'sex',
+            'terms'
+        ]);
+        $item = $this->service->register($userData, $dataSpecificUser);
+
+        return response()->json([
+            'item' => $item,
+            'success' => 1
+        ]);
+    }
+
+    public function login(LoginRequest $request)
+    {
+        $credentials = $request->only(['email', 'password']);
+        if (!$token = Auth::attempt($credentials)) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+        return $this->respondWithToken($token);
+    }
+
+    private function respondWithToken($token)
+    {
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth('api')->factory()->getTTL() * 60,
+        ]);
+    }
+}
