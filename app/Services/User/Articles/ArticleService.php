@@ -2,6 +2,7 @@
 
 namespace App\Services\User\Articles;
 
+use App\Helpers\Status;
 use App\Models\Articles\Article;
 use App\Models\Articles\ImagesArticle;
 use Illuminate\Support\Facades\Auth;
@@ -58,6 +59,24 @@ class ArticleService
         $item->delete();
 
         return true;
+    }
+
+    public function archive(Article $item): Article
+    {
+        if ($item->status == Status::ARTICLE_ARCHIVE)
+        {
+            $item->update([
+                'status' => Status::ARTICLE_PUBLISHED
+            ]);
+
+            return $item;
+        }
+
+        $item->update([
+            'status' => Status::ARTICLE_ARCHIVE
+        ]);
+
+        return $item;
     }
 
 }

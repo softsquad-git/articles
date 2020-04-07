@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Articles;
 
+use App\Helpers\ArticleImage;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ArticleResource extends JsonResource
@@ -14,6 +15,9 @@ class ArticleResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        $data = parent::toArray($request);
+        $data['image'] = ArticleImage::topImage($this->images->first());
+
+        return $data;
     }
 }

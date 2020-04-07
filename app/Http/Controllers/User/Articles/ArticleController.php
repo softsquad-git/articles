@@ -125,4 +125,21 @@ class ArticleController extends Controller
             'success' => 1
         ]);
     }
+
+    public function archive($id)
+    {
+        $item = $this->repository->find($id);
+        if (empty($item)){
+            return response()->json([
+                'success' => 0
+            ]);
+        }
+
+        $item = $this->service->archive($item);
+
+        return response()->json([
+            'success' => 1,
+            'status' => $item->status
+        ]);
+    }
 }
