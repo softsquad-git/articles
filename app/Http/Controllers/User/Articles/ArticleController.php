@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User\Articles;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\Articles\ArticleRequest;
+use App\Http\Requests\User\Articles\ArtilceImagesRequest;
 use App\Http\Resources\Articles\ArticleResource;
 use App\Repositories\User\Articles\ArticleRepository;
 use App\Services\User\Articles\ArticleService;
@@ -86,6 +87,39 @@ class ArticleController extends Controller
         }
 
         $this->service->remove($item);
+
+        return response()->json([
+            'success' => 1
+        ]);
+    }
+
+    public function uploadImages(ArtilceImagesRequest $request, $article_id)
+    {
+        $article = $this->repository->find($article_id);
+        if ($request->hasFile('images') && !empty($article)){
+            $images = $this->service->uploadImages($article_id, $request->file('images'));
+
+            return response()->json([
+                'success' => 1,
+                'items' => $images
+            ]);
+        }
+
+        return response()->json([
+            'success' => 0
+        ]);
+    }
+
+    public function removeImage($id)
+    {
+        $item = $this->repository->findImage($id);
+        if (empty($item)){
+            return response()->json([
+                'success' => 0
+            ]);
+        }
+
+        $this->service->removeImage($item);
 
         return response()->json([
             'success' => 1

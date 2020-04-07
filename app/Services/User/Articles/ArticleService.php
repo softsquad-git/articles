@@ -53,4 +53,11 @@ class ArticleService
         return $articles;
     }
 
+    public function removeImage(ImagesArticle $item)
+    {
+        $item->delete();
+
+        return true;
+    }
+
 }

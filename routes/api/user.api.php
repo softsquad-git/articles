@@ -9,6 +9,8 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth:api'], function () {
           Route::post('store', 'User\Articles\ArticleController@store');
           Route::post('update/{id}', 'User\Articles\ArticleController@update');
           Route::post('remove/{id}', 'User\Articles\ArticleController@remove');
+          Route::post('upload-images/{id}', 'User\Articles\ArticleController@uploadImages');
+          Route::post('remove-image/{id}', 'User\Articles\ArticleController@removeImage');
        });
     });
 });

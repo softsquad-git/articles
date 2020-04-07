@@ -3,6 +3,7 @@
 namespace App\Repositories\User\Articles;
 
 use App\Models\Articles\Article;
+use App\Models\Articles\ImagesArticle;
 
 class ArticleRepository
 {
@@ -23,6 +24,11 @@ class ArticleRepository
     public function find($id)
     {
         return Article::find($id);
+    }
+
+    public function findImage($id)
+    {
+        return ImagesArticle::find($id);
     }
 
 }
