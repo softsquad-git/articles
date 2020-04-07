@@ -23,7 +23,7 @@ class CreateArticlesTable extends Migration
             $table->boolean('is_comment');
             $table->boolean('is_rating');
             $table->string('status')->default('NEW');
-            $table->bigInteger('views');
+            $table->bigInteger('views')->default(0);
             $table->timestamps();
         });
     }

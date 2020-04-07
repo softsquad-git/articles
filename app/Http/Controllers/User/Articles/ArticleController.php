@@ -50,6 +50,8 @@ class ArticleController extends Controller
     public function store(ArticleRequest $request)
     {
         $item = $this->service->store($request->all());
+        if ($request->hasFile('images'))
+            $this->service->uploadImages($item->id, $request->file('images'));
 
         return response()->json([
             'success' => 1,
