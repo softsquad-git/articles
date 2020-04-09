@@ -4,6 +4,7 @@ namespace App\Http\Resources\Articles;
 
 use App\Helpers\ArticleImage;
 use App\Http\Resources\Categories\CategoryResource;
+use App\Http\Resources\Users\UserResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ArticleResource extends JsonResource
@@ -19,7 +20,7 @@ class ArticleResource extends JsonResource
         $data = parent::toArray($request);
         $data['image'] = ArticleImage::topImage($this->images->first());
         $data['category'] = new CategoryResource($this->category);
-
+        $data['user'] = new UserResource($this->user);
         return $data;
     }
 }

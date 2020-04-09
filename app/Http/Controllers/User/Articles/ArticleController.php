@@ -4,6 +4,8 @@ namespace App\Http\Controllers\User\Articles;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\Articles\ArticleRequest;
+use App\Http\Requests\User\Articles\ArticleUploadFileEditorRequest;
+use App\Http\Requests\User\Articles\ArticleUploadVideoEditorRequest;
 use App\Http\Requests\User\Articles\ArtilceImagesRequest;
 use App\Http\Resources\Articles\ArticleResource;
 use App\Repositories\User\Articles\ArticleRepository;
@@ -140,6 +142,19 @@ class ArticleController extends Controller
         return response()->json([
             'success' => 1,
             'status' => $item->status
+        ]);
+    }
+
+    public function uploadFileEditor(ArticleUploadFileEditorRequest $request){
+        if ($request->hasFile('file'))
+        {
+            $link = $this->service->uploadImageEditor($request->file('file'));
+            return [
+                'link' => $link
+            ];
+        }
+        return response()->json([
+            'success' => 0
         ]);
     }
 }

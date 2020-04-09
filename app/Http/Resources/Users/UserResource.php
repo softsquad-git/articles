@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Users;
 
+use App\Helpers\Avatar;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
@@ -14,8 +15,8 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
-        $data[] = parent::toArray($request);
-        $data['avatar'] = $this->avatar->src ?? '';
+        $data = parent::toArray($request);
+        $data['avatar'] = Avatar::src($this->id);
         $data['s'] = $this->specificData;
 
         return $data;

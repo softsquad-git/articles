@@ -12,6 +12,7 @@ class ArticleService
 {
 
     const IMAGES_ARTICLE_PATH = 'assets/data/articles/images/';
+    const IMAGES_ARTICLE_EDITOR_PATH = 'assets/data/articles/wysywig/';
 
     public function store(array $data): Article
     {
@@ -78,5 +79,14 @@ class ArticleService
 
         return $item;
     }
+
+    public function uploadImageEditor($file)
+    {
+        $b_path = ArticleService::IMAGES_ARTICLE_EDITOR_PATH;
+        $file_name = md5(time() . Str::random(32)) . '.' . $file->getClientOriginalExtension();
+        $file->move($b_path, $file_name);
+        return asset($b_path.$file_name);
+    }
+
 
 }
