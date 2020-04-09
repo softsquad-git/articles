@@ -7,7 +7,7 @@ use App\Models\Categories\Category;
 class CategoryRepository
 {
 
-    public function items(array $search): Category
+    public function items(array $search)
     {
         $name = $search['name'];
 
