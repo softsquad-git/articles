@@ -12,6 +12,7 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth:api'], function () {
           Route::post('upload-images/{id}', 'User\Articles\ArticleController@uploadImages');
           Route::post('remove-image/{id}', 'User\Articles\ArticleController@removeImage');
           Route::post('archive/{id}', 'User\Articles\ArticleController@archive');
+          Route::post('categories', 'Categories\CategoryController@all');
        });
     });
 });
