@@ -5,15 +5,15 @@ namespace App\Models\Comments;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
 
-class Comment extends Model
+class ReplyComment extends Model
 {
-    protected $table = 'comments';
+    protected $table = 'answers_comment';
 
     protected $fillable = [
         'user_id',
-        'resource_id',
-        'resource_type',
-        'content'
+        'comment_id',
+        'content',
+        'parent_id'
     ];
 
     public function user()

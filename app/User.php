@@ -4,6 +4,7 @@ namespace App;
 
 use App\Models\Articles\Article;
 use App\Models\Articles\ImagesArticle;
+use App\Models\Comments\Comment;
 use App\Models\Users\Avatar;
 use App\Models\Users\SpecificData;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -57,6 +58,11 @@ class User extends Authenticatable implements JWTSubject
     public function imagesArticle()
     {
         return $this->hasMany(ImagesArticle::class, 'user_id', 'id');
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'user_id');
     }
 
 }
