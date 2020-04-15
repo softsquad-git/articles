@@ -18,3 +18,9 @@ Route::group(['prefix' => 'comments'], function () {
         });
     });
 });
+Route::group(['middleware' => 'auth:api'], function () {
+    Route::post('like', 'Likes\LikeController@like');
+    Route::post('get-like', 'Likes\LikeController@getLike');
+    Route::post('follow', 'Follows\FollowController@follow');
+    Route::post('get-follow', 'Follows\FollowController@getFollow');
+});

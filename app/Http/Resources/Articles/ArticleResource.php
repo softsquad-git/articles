@@ -21,6 +21,9 @@ class ArticleResource extends JsonResource
         $data['image'] = ArticleImage::topImage($this->images->first());
         $data['category'] = new CategoryResource($this->category);
         $data['user'] = new UserResource($this->user);
+        $data['follows'] = count($this->follows);
+        $data['like_up'] = count($this->likes->where('like', 1));
+        $data['like_down'] = count($this->likes->where('like', 0));
         return $data;
     }
 }

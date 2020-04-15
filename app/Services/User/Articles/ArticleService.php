@@ -13,6 +13,7 @@ class ArticleService
 
     const IMAGES_ARTICLE_PATH = 'assets/data/articles/images/';
     const IMAGES_ARTICLE_EDITOR_PATH = 'assets/data/articles/wysywig/';
+    const RESOURCE_TYPE = 'ARTICLE';
 
     public function store(array $data): Article
     {

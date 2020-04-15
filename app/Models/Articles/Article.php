@@ -3,6 +3,9 @@
 namespace App\Models\Articles;
 
 use App\Models\Categories\Category;
+use App\Models\Follows\Follow;
+use App\Models\Likes\Like;
+use App\Services\User\Articles\ArticleService;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
 
@@ -35,6 +38,18 @@ class Article extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function likes()
+    {
+        return $this->hasMany(Like::class, 'resource_id', 'id')
+            ->where('resource_type', ArticleService::RESOURCE_TYPE);
+    }
+
+    public function follows()
+    {
+        return $this->hasMany(Follow::class, 'resource_id', 'id')
+            ->where('resource_type', ArticleService::RESOURCE_TYPE);
     }
 
 }

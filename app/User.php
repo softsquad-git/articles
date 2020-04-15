@@ -5,6 +5,8 @@ namespace App;
 use App\Models\Articles\Article;
 use App\Models\Articles\ImagesArticle;
 use App\Models\Comments\Comment;
+use App\Models\Follows\Follow;
+use App\Models\Likes\Like;
 use App\Models\Users\Avatar;
 use App\Models\Users\SpecificData;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -63,6 +65,16 @@ class User extends Authenticatable implements JWTSubject
     public function comments()
     {
         return $this->hasMany(Comment::class, 'user_id');
+    }
+
+    public function likes()
+    {
+        return $this->hasMany(Like::class, 'user_id');
+    }
+
+    public function follows()
+    {
+        return $this->hasMany(Follow::class, 'user_id');
     }
 
 }
