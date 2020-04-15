@@ -26,3 +26,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('article-rating', 'Front\Articles\RatingArticleController@store');
 });
 
+Route::group(['prefix' => 'profile-page'], function (){
+    Route::post('user/{id}', 'Front\Profile\ProfileController@user');
+    Route::post('articles', 'Front\Profile\ProfileController@articles');
+});
+Route::post('categories-all', 'Categories\CategoryController@all');
