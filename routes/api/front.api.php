@@ -24,3 +24,4 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('follow', 'Follows\FollowController@follow');
     Route::post('get-follow', 'Follows\FollowController@getFollow');
 });
+Route::post('ratings', 'Front\Articles\RatingArticleController@get');

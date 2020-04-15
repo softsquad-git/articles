@@ -5,6 +5,7 @@ namespace App\Http\Resources\Articles;
 use App\Helpers\ArticleImage;
 use App\Http\Resources\Categories\CategoryResource;
 use App\Http\Resources\Users\UserResource;
+use App\Repositories\Front\Articles\RatingArticleRepository;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ArticleResource extends JsonResource
@@ -24,6 +25,7 @@ class ArticleResource extends JsonResource
         $data['follows'] = count($this->follows);
         $data['like_up'] = count($this->likes->where('like', 1));
         $data['like_down'] = count($this->likes->where('like', 0));
+        $data['ratings'] = RatingArticleRepository::getAverageRatings($this->id);
         return $data;
     }
 }
