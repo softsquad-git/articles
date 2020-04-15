@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Front\Articles\RatingArticleRequest;
 use App\Repositories\Front\Articles\RatingArticleRepository;
 use App\Services\Front\Articles\RatingArticleService;
+use Illuminate\Http\Request;
 
 class RatingArticleController extends Controller
 {
@@ -24,15 +25,11 @@ class RatingArticleController extends Controller
 
     public function store(RatingArticleRequest $request)
     {
-        $item = $this->service->store($request->all());
+        $item = $this->repository->findRatingUser($request->article_id);
+        $item = $this->service->store($request->all(), $item);
         return response()->json([
             'success' => 1,
             'item' => $item
         ]);
-    }
-
-    public function get()
-    {
-        return RatingArticleRepository::getAverageRatings(1);
     }
 }

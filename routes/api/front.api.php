@@ -23,5 +23,6 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('get-like', 'Likes\LikeController@getLike');
     Route::post('follow', 'Follows\FollowController@follow');
     Route::post('get-follow', 'Follows\FollowController@getFollow');
+    Route::post('article-rating', 'Front\Articles\RatingArticleController@store');
 });
-Route::post('ratings', 'Front\Articles\RatingArticleController@get');
+

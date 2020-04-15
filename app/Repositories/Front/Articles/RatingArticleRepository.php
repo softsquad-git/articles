@@ -3,6 +3,7 @@
 namespace App\Repositories\Front\Articles;
 
 use App\Models\Articles\RatingArticle;
+use Illuminate\Support\Facades\Auth;
 
 class RatingArticleRepository
 {
@@ -24,6 +25,13 @@ class RatingArticleRepository
         $points_sum = array_sum($points);
         $ratings_count = count($ratings);
         return $points_sum / $ratings_count;
+    }
+
+    public function findRatingUser($id){
+        return RatingArticle::where([
+            'user_id' => Auth::id(),
+            'article_id' => $id
+        ])->first();
     }
 
 }
