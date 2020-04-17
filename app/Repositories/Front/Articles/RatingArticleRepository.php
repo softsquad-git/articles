@@ -24,7 +24,7 @@ class RatingArticleRepository
         }
         $points_sum = array_sum($points);
         $ratings_count = count($ratings);
-        return $points_sum / $ratings_count;
+        return $ratings_count == 0 ? 0 : ($points_sum / $ratings_count);
     }
 
     public function findRatingUser($id){

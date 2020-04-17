@@ -14,5 +14,11 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth:api'], function () {
             Route::post('categories', 'Categories\CategoryController@all');
             Route::post('upload-file-editor', 'User\Articles\ArticleController@uploadFileEditor');
         });
+        Route::group(['prefix' => 'settings'], function (){
+            Route::post('basic-data', 'User\Settings\SettingController@updateBasicData');
+            Route::post('try-update-email', 'User\Settings\SettingController@tryUpdateEmailUser');
+            Route::post('update-email', 'User\Settings\SettingController@updateEmailUser');
+            Route::post('check-tmp-email', 'User\Settings\SettingController@checkTmpEmail');
+        });
     });
 });

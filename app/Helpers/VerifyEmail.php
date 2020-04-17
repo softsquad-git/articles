@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Mail;
 class VerifyEmail
 {
 
-    private static function generateKey()
+    public static function generateKey()
     {
         return substr(md5(time() . date('Y-m-d H:i:s')), 15, 15);
     }
