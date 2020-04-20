@@ -19,6 +19,7 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth:api'], function () {
             Route::post('try-update-email', 'User\Settings\SettingController@tryUpdateEmailUser');
             Route::post('update-email', 'User\Settings\SettingController@updateEmailUser');
             Route::post('check-tmp-email', 'User\Settings\SettingController@checkTmpEmail');
+            Route::post('avatar', 'User\Settings\SettingController@updateAvatar');
         });
     });
 });

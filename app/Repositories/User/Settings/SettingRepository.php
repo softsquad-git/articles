@@ -2,6 +2,7 @@
 
 namespace App\Repositories\User\Settings;
 
+use App\Models\Users\Avatar;
 use App\Models\Users\ChangeEmail;
 use App\User;
 use Illuminate\Support\Facades\Auth;
@@ -16,12 +17,18 @@ class SettingRepository
 
     public function findSpecificDataUser()
     {
-        return $this->findUser()->s;
+        return $this->findUser()->specificData;
     }
 
     public function findTmpChangeEmail()
     {
         return ChangeEmail::where('user_id', Auth::id())
+            ->first();
+    }
+
+    public function findAvatarUser()
+    {
+        return Avatar::where('user_id', Auth::id())
             ->first();
     }
 

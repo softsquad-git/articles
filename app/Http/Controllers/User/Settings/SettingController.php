@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User\Settings;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\Settings\SettingRequest;
 use App\Http\Requests\User\Settings\TryUpdateEmailUserRequest;
+use App\Http\Requests\User\Settings\UpdateAvatarRequest;
 use App\Http\Requests\User\Settings\UpdateEmailUserRequest;
 use App\Repositories\User\Settings\SettingRepository;
 use App\Services\User\Settings\SettingService;
@@ -64,6 +65,16 @@ class SettingController extends Controller
     {
         return response()->json([
             'is_tmp' => $this->repository->findTmpChangeEmail() ? 1 : 0
+        ]);
+    }
+
+    public function updateAvatar(UpdateAvatarRequest $request)
+    {
+        $user_avatar = $this->repository->findAvatarUser();
+        $item = $this->service->updateAvatar($request->file('avatar'), $user_avatar);
+        return response()->json([
+            'success' => 1,
+            'item' => $item
         ]);
     }
 }
