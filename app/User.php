@@ -2,14 +2,15 @@
 
 namespace App;
 
+use App\Helpers\FriendshipStatus;
 use App\Models\Articles\Article;
 use App\Models\Articles\ImagesArticle;
 use App\Models\Comments\Comment;
 use App\Models\Follows\Follow;
 use App\Models\Likes\Like;
 use App\Models\Users\Avatar;
+use App\Models\Users\Photos\AlbumPhotos;
 use App\Models\Users\SpecificData;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -72,9 +73,20 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Like::class, 'user_id');
     }
 
+    public function albums()
+    {
+        return $this->hasMany(AlbumPhotos::class, 'user_id');
+    }
+
     public function follows()
     {
         return $this->hasMany(Follow::class, 'user_id');
+    }
+
+    public function friends()
+    {
+        return $this->belongsToMany(User::class, 'friends', 'sender_id', 'recipient_id')
+            ->withPivot('status');
     }
 
 }

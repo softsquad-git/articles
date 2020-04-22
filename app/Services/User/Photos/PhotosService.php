@@ -15,7 +15,7 @@ class PhotosService
         $photosUser = [];
         $b_path = PhotosService::PATH_PHOTOS;
         foreach ($photos as $photo){
-            $file_name = md5(time() . Str::random(32) . '.' . $photo->getClientOriginalExtension());
+            $file_name = md5(time() . Str::random(32)) . '.' . $photo->getClientOriginalExtension();
             $photo->move($b_path, $file_name);
             $img = Photos::create([
                 'user_id' => Auth::id(),

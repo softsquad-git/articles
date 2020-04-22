@@ -3,6 +3,8 @@
 namespace App\Repositories\Front\Profile;
 
 use App\Models\Articles\Article;
+use App\Models\Users\Photos\AlbumPhotos;
+use App\Models\Users\Photos\Photos;
 use App\User;
 
 class ProfileRepository
@@ -26,6 +28,16 @@ class ProfileRepository
             $items->where('category_id', $category_id);
         return $items
             ->paginate(20);
+    }
+
+    public function albums(User $item)
+    {
+        return $item->albums;
+    }
+
+    public function photos(AlbumPhotos $item)
+    {
+        return $item->photos;
     }
 
 }

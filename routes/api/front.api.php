@@ -29,5 +29,8 @@ Route::group(['middleware' => 'auth:api'], function () {
 Route::group(['prefix' => 'profile-page'], function (){
     Route::post('user/{id}', 'Front\Profile\ProfileController@user');
     Route::post('articles', 'Front\Profile\ProfileController@articles');
+    Route::post('albums', 'Front\Profile\ProfileController@albums');
+    Route::post('photos', 'Front\Profile\ProfileController@photos');
 });
 Route::post('categories-all', 'Categories\CategoryController@all');
+Route::post('peoples', 'Front\Friends\FriendController@usersList');

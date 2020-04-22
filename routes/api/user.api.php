@@ -32,5 +32,9 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth:api'], function () {
             Route::post('store', 'User\Photos\PhotoController@store');
             Route::post('remove/{id}', 'User\Photos\PhotoController@remove');
         });
+        Route::group(['prefix' => 'friends'], function (){
+            Route::post('', 'User\Friends\FriendController@friends');
+            Route::post('add', 'User\Friends\FriendController@store');
+        });
     });
 });
