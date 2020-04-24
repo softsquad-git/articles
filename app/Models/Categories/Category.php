@@ -10,7 +10,9 @@ class Category extends Model
     protected $table = 'categories';
 
     protected $fillable = [
-        'name'
+        'name',
+        'status',
+        'icon'
     ];
 
     public function articles()

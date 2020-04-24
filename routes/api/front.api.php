@@ -38,4 +38,5 @@ Route::post('peoples', 'Front\Friends\FriendController@usersList');
 
 Route::group(['prefix' => 'home'], function (){
     Route::post('latest-four-articles', 'Home\HomePageController@getLatestFourArticles');
+    Route::post('categories', 'Home\HomePageController@getCategories');
 });
