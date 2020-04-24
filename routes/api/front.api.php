@@ -35,3 +35,7 @@ Route::group(['prefix' => 'profile-page'], function (){
 });
 Route::post('categories-all', 'Categories\CategoryController@all');
 Route::post('peoples', 'Front\Friends\FriendController@usersList');
+
+Route::group(['prefix' => 'home'], function (){
+    Route::post('latest-four-articles', 'Home\HomePageController@getLatestFourArticles');
+});
