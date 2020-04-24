@@ -18,7 +18,6 @@ class UserResource extends JsonResource
         $data = parent::toArray($request);
         $data['avatar'] = Avatar::src($this->id);
         $data['s'] = $this->specificData;
-        $data['friends'] = $this->friends;
 
         return $data;
     }

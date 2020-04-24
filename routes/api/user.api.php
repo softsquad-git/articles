@@ -35,6 +35,10 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth:api'], function () {
         Route::group(['prefix' => 'friends'], function (){
             Route::post('', 'User\Friends\FriendController@friends');
             Route::post('add', 'User\Friends\FriendController@store');
+            Route::post('sent', 'User\Friends\FriendController@sentInvitations');
+            Route::post('waiting', 'User\Friends\FriendController@waitingInvitations');
+            Route::post('remove/{id}', 'User\Friends\FriendController@remove');
+            Route::post('accept/{id}', 'User\Friends\FriendController@acceptInvitation');
         });
     });
 });

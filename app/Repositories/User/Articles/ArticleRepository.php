@@ -4,6 +4,7 @@ namespace App\Repositories\User\Articles;
 
 use App\Models\Articles\Article;
 use App\Models\Articles\ImagesArticle;
+use Illuminate\Support\Facades\Auth;
 
 class ArticleRepository
 {
@@ -12,7 +13,8 @@ class ArticleRepository
     {
         $status = $search['status'];
 
-        $items = Article::orderBy('id', 'DESC');
+        $items = Article::orderBy('id', 'DESC')
+            ->where('user_id', Auth::id());
 
         if (!empty($status))
             $items->where('status', $status);
