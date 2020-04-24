@@ -75,4 +75,13 @@ class AuthController extends Controller
             return response()->json($e->getMessage());
         }
     }
+
+    public function refreshToken()
+    {
+        try {
+            return $this->respondWithToken(Auth::guard('api')->refresh());
+        } catch (\Exception $e){
+            return response()->json($e->getMessage());
+        }
+    }
 }
