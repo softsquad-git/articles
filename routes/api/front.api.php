@@ -31,6 +31,7 @@ Route::group(['prefix' => 'profile-page'], function (){
     Route::post('articles', 'Front\Profile\ProfileController@articles');
     Route::post('albums', 'Front\Profile\ProfileController@albums');
     Route::post('photos', 'Front\Profile\ProfileController@photos');
+    Route::post('friends/{user_id}', 'Front\Profile\ProfileController@friends');
 });
 Route::post('categories-all', 'Categories\CategoryController@all');
 Route::post('peoples', 'Front\Friends\FriendController@usersList');

@@ -27,13 +27,17 @@ class FriendController extends Controller
     }
 
     /**
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function friends()
+    public function friends(Request $request)
     {
-        $items = $this->repository->getFriends(Auth::id());
-
-        return FriendResource::collection($items);
+        try {
+            $items = $this->repository->getFriends(Auth::id(), $request->input('name'));
+            return FriendResource::collection($items);
+        } catch (\Exception $e){
+            return response()->json($e->getMessage());
+        }
     }
 
     /**
