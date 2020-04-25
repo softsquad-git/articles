@@ -17,6 +17,7 @@ class CommentResource extends JsonResource
     {
         $data = parent::toArray($request);
         $data['user'] = new UserResource($this->user);
+        $data['c_answers'] = count($this->answers);
 
         return $data;
     }
