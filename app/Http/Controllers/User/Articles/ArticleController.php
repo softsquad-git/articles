@@ -7,6 +7,7 @@ use App\Http\Requests\User\Articles\ArticleRequest;
 use App\Http\Requests\User\Articles\ArticleUploadFileEditorRequest;
 use App\Http\Requests\User\Articles\ArticleUploadVideoEditorRequest;
 use App\Http\Requests\User\Articles\ArtilceImagesRequest;
+use App\Http\Resources\Articles\ArticleImagesResource;
 use App\Http\Resources\Articles\ArticleResource;
 use App\Repositories\User\Articles\ArticleRepository;
 use App\Services\User\Articles\ArticleService;
@@ -156,5 +157,15 @@ class ArticleController extends Controller
         return response()->json([
             'success' => 0
         ]);
+    }
+
+    public function getImages(int $id)
+    {
+        try {
+            $items = $this->repository->getImages($id);
+            return ArticleImagesResource::collection($items);
+        } catch (\Exception $e){
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        }
     }
 }

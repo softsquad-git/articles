@@ -12,5 +12,6 @@ class Status
     const ARTICLE_ARCHIVE = 'ARCHIVE';
     const ARTICLE_IMPROVE = 'IMPROVE';
     const ARTICLE_LOCKED = 'LOCKED';
+    const ARTICLE_AUTHOR = 'AUTHOR';
 
 }

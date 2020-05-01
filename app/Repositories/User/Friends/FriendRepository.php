@@ -34,7 +34,7 @@ class FriendRepository
                     $q->where('id', '!=', $user_id);
                     if (!empty($name)) {
                         $q->whereHas('specificData', function ($query) use ($name) {
-                            $query->where(DB::raw("CONCAT(`name`, ' ', `last_name`)"), 'LIKE', "%".$name."%");
+                            $query->where(DB::raw("CONCAT(`name`, ' ', `last_name`)"), 'LIKE', "%" . $name . "%");
                         });
                     }
                 },
@@ -42,7 +42,7 @@ class FriendRepository
                     $q->where('id', '!=', $user_id);
                     if (!empty($name)) {
                         $q->whereHas('specificData', function ($query) use ($name) {
-                            $query->where(DB::raw("CONCAT(`name`, ' ', `last_name`)"), 'LIKE', "%".$name."%");
+                            $query->where(DB::raw("CONCAT(`name`, ' ', `last_name`)"), 'LIKE', "%" . $name . "%");
                         });
                     }
                 }
@@ -50,7 +50,6 @@ class FriendRepository
             ->get();
     }
 
-//DB::raw("CONCAT(users.first_name,' ',users.last_name) as full_name")
     public function sentInvitations()
     {
         return Friend::where(['sender_id' => Auth::id(), 'status' => FriendshipStatus::SENT])

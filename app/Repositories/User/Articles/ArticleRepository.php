@@ -33,4 +33,17 @@ class ArticleRepository
         return ImagesArticle::find($id);
     }
 
+    /**
+     * @param int $id
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getImages(int $id)
+    {
+        $article = $this->find($id);
+        if (empty($article))
+            throw new \Exception(sprintf('Article not found'));
+        return $article->images;
+    }
+
 }

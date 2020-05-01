@@ -2,6 +2,7 @@
 
 Route::post('articles', 'Front\Articles\ArticleController@items');
 Route::post('article/{id}', 'Front\Articles\ArticleController@item');
+Route::post('get-images-article/{id}', 'User\Articles\ArticleController@getImages');
 Route::group(['prefix' => 'comments'], function () {
     Route::post('', 'Comments\CommentController@items');     #list comments
     Route::group(['prefix' => 'answers'], function () {
@@ -39,4 +40,6 @@ Route::post('peoples', 'Front\Friends\FriendController@usersList');
 Route::group(['prefix' => 'home'], function (){
     Route::post('latest-four-articles', 'Home\HomePageController@getLatestFourArticles');
     Route::post('categories', 'Home\HomePageController@getCategories');
+    Route::post('articles-from-category/{id}', 'Home\HomePageController@getArticleFromCategory');
+    Route::post('articles-author-service', 'Home\HomePageController@getArticlesAuthorService');
 });
