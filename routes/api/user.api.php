@@ -48,8 +48,8 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth:api'], function () {
                 Route::post('update/{id}', 'User\Friends\Groups\FriendGroupController@update');
                 Route::post('remove/{id}', 'User\Friends\Groups\FriendGroupController@remove');
                 Route::post('preview/{id}', 'User\Friends\Groups\FriendGroupController@item');
-                Route::group(['prefix' => 'belong'], function () {
-                    Route::post('', 'User\Friends\Groups\FriendGroupController@getBelongGroups');
+                Route::group(['prefix' => 'belong-to'], function (){
+                    Route::post('', 'User\Friends\Groups\FriendGroupUserController@getGroupsBelongTo');
                 });
                 Route::group(['prefix' => 'users'], function () {
                     Route::post('get/{group_id}', 'User\Friends\Groups\FriendGroupUserController@items');

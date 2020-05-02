@@ -3,6 +3,7 @@
 namespace App\Repositories\User\Friends\Groups;
 
 use App\Models\Friends\Groups\FriendGroupsUser;
+use Illuminate\Support\Facades\Auth;
 
 class GroupUsersRepository
 {
@@ -16,6 +17,10 @@ class GroupUsersRepository
         return FriendGroupsUser::find($id);
     }
 
+    /**
+     * @param array $params
+     * @return mixed
+     */
     public function items(array $params)
     {
         $status = $params['status'];
@@ -27,6 +32,21 @@ class GroupUsersRepository
             ->orderBy('id', $ordering ?? 'DESC');
 
         return $items
+            ->get();
+    }
+
+    /**
+     * @param array $params
+     * @return mixed
+     */
+    public function getGroupsBelongTo(array $params)
+    {
+        $status = $params['status'];
+        $ordering = $params['ordering'];
+
+        return FriendGroupsUser::where('user_id', Auth::id())
+            ->where('status', $status)
+            ->orderBy('id', $ordering ?? 'DESC')
             ->get();
     }
 
