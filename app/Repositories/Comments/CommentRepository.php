@@ -7,22 +7,27 @@ use App\Models\Comments\Comment;
 class CommentRepository
 {
 
-    public function items(array $params)
+    /**
+     * @param array $params
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getComments(array $params)
     {
-        $resource_id = $params['resource_id'];
-        $resource_type = $params['resource_type'];
-        if (!empty($resource_id) && !empty($resource_type)) {
-            return Comment::where([
-                'resource_id' => $resource_id,
-                'resource_type' => $resource_type
-            ])->orderBy('id', 'DESC')
-                ->paginate(20);
-        }
-
-        return false;
+        if (empty($params['resource_id']) || empty($params['resource_type']))
+            throw new \Exception(sprintf('Refresh page and try again'));
+        return Comment::where([
+            'resource_id' => $params['resource_id'],
+            'resource_type' => $params['resource_type']
+        ])->orderBy('id', $params['ordering'] ?? 'DESC')
+            ->paginate(20);
     }
 
-    public function find($id)
+    /**
+     * @param int $id
+     * @return mixed
+     */
+    public function findComment(int $id)
     {
         return Comment::find($id);
     }

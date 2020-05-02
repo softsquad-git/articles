@@ -10,25 +10,35 @@ use Illuminate\Http\Request;
 class CategoryController extends Controller
 {
     /**
-     * @var $repository
+     * @var CategoryRepository
      */
-    private $repository;
+    private $categoryRepository;
 
-    public function __construct(CategoryRepository $repository)
+    /**
+     * CategoryController constructor.
+     * @param CategoryRepository $categoryRepository
+     */
+    public function __construct(CategoryRepository $categoryRepository)
     {
-        $this->repository = $repository;
+        $this->categoryRepository = $categoryRepository;
     }
 
+    /**
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
     public function all()
     {
-        return CategoryResource::collection($this->repository->all());
+        return CategoryResource::collection($this->categoryRepository->getAllCategories());
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
     public function items(Request $request){
         $search = [
             'name' => $request->input('name')
         ];
-
-        return CategoryResource::collection($this->repository->items($search));
+        return CategoryResource::collection($this->categoryRepository->getCategories($search));
     }
 }

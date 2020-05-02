@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Repositories\Front\Articles;
-
 
 use App\Helpers\Status;
 use App\Models\Articles\Article;
@@ -10,7 +8,7 @@ use App\Models\Articles\Article;
 class ArticleRepository
 {
 
-    public function items(array $search)
+    public function getArticles(array $search)
     {
         $title = $search['title'];
         $category = $search['category'];
@@ -28,9 +26,17 @@ class ArticleRepository
             ->paginate(20);
     }
 
-    public function find($id)
+    /**
+     * @param int $id
+     * @return mixed
+     * @throws \Exception
+     */
+    public function findArticle(int $id)
     {
-        return Article::find($id);
+        $item = Article::find($id);
+        if (empty($item))
+            throw new \Exception(sprintf('Article not found'));
+        return $item;
     }
 
 }

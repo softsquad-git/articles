@@ -5,19 +5,34 @@ namespace App\Repositories\Front\Profile;
 use App\Models\Articles\Article;
 use App\Models\Users\Photos\AlbumPhotos;
 use App\Models\Users\Photos\Photos;
+use App\Repositories\User\Photos\AlbumPhotosRepository;
 use App\User;
 
 class ProfileRepository
 {
+    /**
+     * @var AlbumPhotosRepository
+     */
+    private $albumPhotosRepository;
 
-    public function find($id)
+    public function __construct(AlbumPhotosRepository $albumPhotosRepository)
     {
-        return User::find($id);
+        $this->albumPhotosRepository = $albumPhotosRepository;
+    }
+
+    public function findUser(int $id)
+    {
+        $user = User::find($id);
+        if (empty($user))
+            throw new \Exception(sprintf('User not found'));
+        return $user;
     }
 
     public function articles(array $params)
     {
         $user_id = $params['user_id'];
+        if (empty($user_id))
+            throw new \Exception(sprintf('User not found. Refresh page please'));
         $title = $params['title'];
         $category_id = $params['category_id'];
         $items = Article::where('user_id', $user_id)
@@ -30,14 +45,20 @@ class ProfileRepository
             ->paginate(20);
     }
 
-    public function albums(User $item)
+    public function albums(int $id)
     {
-        return $item->albums;
+        $user = $this->findUser($id);
+        if (empty($user))
+            throw new \Exception(sprintf('User not found'));
+        return $user->albums;
     }
 
-    public function photos(AlbumPhotos $item)
+    public function photos(int $id)
     {
-        return $item->photos;
+        $album = $this->albumPhotosRepository->find($id);
+        if (empty($album))
+            throw new \Exception(sprintf('Album not found'));
+        return $album->photos;
     }
 
 }

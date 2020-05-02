@@ -10,91 +10,88 @@ use App\Http\Resources\User\Photos\PhotosResource;
 use App\Http\Resources\Users\UserResource;
 use App\Repositories\Front\Profile\ProfileRepository;
 use App\Repositories\User\Friends\FriendRepository;
-use App\Repositories\User\Photos\AlbumPhotosRepository;
-use App\Services\Front\Profile\ProfileService;
 use Illuminate\Http\Request;
 
 class ProfileController extends Controller
 {
     /**
-     * @var $service
-     * @var $repository
-     * @var AlbumPhotosRepository,
+     * @var ProfileRepository
+     */
+    private $profileRepository;
+    /**
      * @var FriendRepository
      */
-    private $service;
-    private $repository;
-    private $albumPhotosRepository;
     private $friendRepository;
 
-    public function __construct(ProfileRepository $repository,
-                                ProfileService $service,
-                                AlbumPhotosRepository $albumPhotosRepository,
-                                FriendRepository $friendRepository
+    /**
+     * ProfileController constructor.
+     * @param ProfileRepository $profileRepository
+     * @param FriendRepository $friendRepository
+     */
+    public function __construct(
+        ProfileRepository $profileRepository,
+        FriendRepository $friendRepository
     )
     {
-        $this->service = $service;
-        $this->repository = $repository;
-        $this->albumPhotosRepository = $albumPhotosRepository;
+        $this->profileRepository = $profileRepository;
         $this->friendRepository = $friendRepository;
     }
 
-    public function user($id)
+    /**
+     * @param int $id
+     * @return UserResource|\Illuminate\Http\JsonResponse
+     */
+    public function user(int $id)
     {
-        $item = $this->repository->find($id);
-        if (empty($item)) {
-            return response()->json([
-                'success' => 0
-            ]);
+        try {
+            return new UserResource($this->profileRepository->findUser($id));
+        }catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
         }
-        return new UserResource($item);
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
     public function articles(Request $request)
     {
-        if (empty($request->input('user_id'))) {
-            return response()->json([
-                'success' => 0
-            ], 403);
-        }
         $params = [
             'user_id' => $request->input('user_id'),
             'title' => $request->input('title'),
             'category_id' => $request->input('category_id')
         ];
-        return ArticleResource::collection($this->repository->articles($params));
+        try {
+            return ArticleResource::collection($this->profileRepository->articles($params));
+        } catch (\Exception $e){
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        }
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
     public function albums(Request $request)
     {
-        if (empty($request->input('user_id'))) {
-            return response()->json(['success' => 0]);
+        try {
+            return AlbumPhotosResource::collection($this->profileRepository->albums($request->input('user_id')));
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
         }
-        $item = $this->repository->find($request->input('user_id'));
-        if (empty($item)) {
-            return response()->json([
-                'success' => 0
-            ]);
-        }
-        return AlbumPhotosResource::collection($this->repository->albums($item));
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
     public function photos(Request $request)
     {
-        if (empty($request->input('album_id'))) {
-            return response()->json([
-                'success' => 0
-            ]);
+        try {
+            return PhotosResource::collection($this->profileRepository->photos($request->input('album_id')));
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
         }
-        $item = $this->albumPhotosRepository->find($request->input('album_id'));
-        if (empty($item)) {
-            return response()->json([
-                'success' => 0
-            ]);
-        }
-        $items = $this->repository->photos($item);
-
-        return PhotosResource::collection($items);
     }
 
     /**

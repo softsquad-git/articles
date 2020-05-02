@@ -3,13 +3,33 @@
 namespace App\Services\Likes;
 
 use App\Models\Likes\Like;
+use App\Repositories\Likes\LikeRepository;
 use Illuminate\Support\Facades\Auth;
 
 class LikeService
 {
+    /**
+     * @var LikeRepository
+     */
+    private $likeRepository;
 
-    public function like(array $data, $item)
+    /**
+     * LikeService constructor.
+     * @param LikeRepository $likeRepository
+     */
+    public function __construct(LikeRepository $likeRepository)
     {
+        $this->likeRepository = $likeRepository;
+    }
+
+    /**
+     * @param array $data
+     * @param array $params
+     * @return bool
+     */
+    public function like(array $data, array $params)
+    {
+        $item = $this->likeRepository->like($params['resource_id'], $params['resource_type']);
         $data['user_id'] = Auth::id();
         // add like or dislike
         if (empty($item)){

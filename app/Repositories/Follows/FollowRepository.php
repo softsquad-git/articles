@@ -8,7 +8,12 @@ use Illuminate\Support\Facades\Auth;
 class FollowRepository
 {
 
-    public function follow($resource_id, $resource_type)
+    /**
+     * @param int $resource_id
+     * @param string $resource_type
+     * @return mixed
+     */
+    public function follow(int $resource_id, string $resource_type)
     {
         return Follow::where([
             'user_id' => Auth::id(),

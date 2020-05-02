@@ -11,44 +11,57 @@ use Illuminate\Http\Request;
 class FollowController extends Controller
 {
     /**
-     * @var $service
-     * @var $repository
+     * @var FollowService
      */
-    private $service;
-    private $repository;
+    private $followService;
 
-    public function __construct(FollowService $service, FollowRepository $repository)
+    /**
+     * @var FollowRepository
+     */
+    private $followRepository;
+
+    /**
+     * FollowController constructor.
+     * @param FollowService $followService
+     * @param FollowRepository $followRepository
+     */
+    public function __construct(FollowService $followService, FollowRepository $followRepository)
     {
-        $this->repository = $repository;
-        $this->service = $service;
+        $this->followRepository = $followRepository;
+        $this->followService = $followService;
     }
 
+    /**
+     * @param FollowRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function follow(FollowRequest $request)
     {
-        $resource_id = $request->resource_id;
-        $resource_type = $request->resource_type;
+        $params = [
+            'resource_id' => $request->resource_id,
+            'resource_type' => $request->resource_type
+        ];
         $data = $request->all();
-        $follow = $this->repository->follow($resource_id, $resource_type);
-        $item = $this->service->follow($data, $follow);
-
-        return response()->json([
-            'success' => 1,
-            'item' => $item
-        ]);
+        try {
+            $this->followService->follow($data, $params);
+            return response()->json(['success' => 1]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        }
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getFollow(Request $request)
     {
         $resource_id = $request->input('resource_id');
         $resource_type = $request->input('resource_type');
         if (empty($resource_id) || empty($resource_type)){
-            return response()->json([
-                'success' => 0
-            ]);
+            return response()->json(['success' => 0]);
         }
-        $follow = $this->repository->follow($resource_id, $resource_type);
-        return response()->json([
-            'follow' => $follow ? true : false
-        ]);
+        $follow = $this->followRepository->follow($resource_id, $resource_type);
+        return response()->json(['follow' => $follow ? true : false]);
     }
 }

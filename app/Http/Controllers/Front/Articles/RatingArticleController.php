@@ -10,26 +10,26 @@ use Illuminate\Http\Request;
 
 class RatingArticleController extends Controller
 {
-    /**
-     * @var $service
-     * @var $repository
-     */
-    private $service;
-    private $repository;
 
-    public function __construct(RatingArticleService $service, RatingArticleRepository $repository)
+    private $ratingArticleService;
+    private $ratingArticleRepository;
+
+    public function __construct(
+        RatingArticleService $ratingArticleService,
+        RatingArticleRepository $ratingArticleRepository
+    )
     {
-        $this->service = $service;
-        $this->repository = $repository;
+        $this->ratingArticleRepository = $ratingArticleRepository;
+        $this->ratingArticleService = $ratingArticleService;
     }
 
     public function store(RatingArticleRequest $request)
     {
-        $item = $this->repository->findRatingUser($request->article_id);
-        $item = $this->service->store($request->all(), $item);
-        return response()->json([
-            'success' => 1,
-            'item' => $item
-        ]);
+        try {
+            $this->ratingArticleService->store($request->all(), $request->article_id);
+            return response()->json(['success' => 1]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        }
     }
 }

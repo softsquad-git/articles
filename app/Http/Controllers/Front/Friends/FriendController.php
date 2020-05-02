@@ -12,19 +12,24 @@ class FriendController extends Controller
     /**
      * @var FriendRepository
      */
-    private $repository;
+    private $friendRepository;
 
-    public function __construct(FriendRepository $repository)
+    /**
+     * FriendController constructor.
+     * @param FriendRepository $friendRepository
+     */
+    public function __construct(FriendRepository $friendRepository)
     {
-        $this->repository = $repository;
+        $this->friendRepository = $friendRepository;
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
     public function usersList(Request $request)
     {
-        $params = [
-            'name' => $request->input('name')
-        ];
-
-        return UserResource::collection($this->repository->usersList($params));
+        $params = ['name' => $request->input('name')];
+        return UserResource::collection($this->friendRepository->usersList($params));
     }
 }

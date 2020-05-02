@@ -11,77 +11,85 @@ use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
-    /**
-     * @var $repository
-     * @var $service
-     */
-    private $repository;
-    private $service;
 
-    public function __construct(CommentRepository $repository, CommentService $service)
+    /**
+     * @var CommentRepository
+     */
+    private $commentsRepository;
+
+    /**
+     * @var CommentService
+     */
+    private $commentsService;
+
+    /**
+     * CommentController constructor.
+     * @param CommentRepository $commentRepository
+     * @param CommentService $commentService
+     */
+    public function __construct(CommentRepository $commentRepository, CommentService $commentService)
     {
-        $this->repository = $repository;
-        $this->service = $service;
+        $this->commentsRepository = $commentRepository;
+        $this->commentsService = $commentService;
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
     public function items(Request $request)
     {
-        $resource_id = $request->input('resource_id');
-        $resource_type = $request->input('resource_type');
-        if (empty($resource_id) || empty($resource_type)){
-            return response()->json([
-                'success' => 0
-            ]);
+        try {
+            $params = [
+                'resource_id' => $request->input('resource_id'),
+                'resource_type' => $request->input('resource_type')
+            ];
+            return CommentResource::collection($this->commentsRepository->getComments($params));
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
         }
-
-        $params = [
-            'resource_id' => $resource_id,
-            'resource_type' => $resource_type
-        ];
-        $items = $this->repository->items($params);
-
-        return CommentResource::collection($items);
     }
 
+    /**
+     * @param CommentRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(CommentRequest $request)
     {
-        $item = $this->service->store($request->all());
-
-        return response()->json([
-            'item' => $item,
-            'success' => 1
-        ]);
+        try {
+            $this->commentsService->store($request->all());
+            return response()->json(['success' => 1]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        }
     }
 
+    /**
+     * @param CommentRequest $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function update(CommentRequest $request, $id)
     {
-        $item = $this->repository->find($id);
-        if (empty($item)) {
-            return response()->json([
-                'success' => 0
-            ]);
+        try {
+            $this->commentsService->update($request->all(), $id);
+            return response()->json(['success' => 1]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
         }
-        $item = $this->service->update($request->all(), $item);
-
-        return response()->json([
-            'item' => $item,
-            'success' => 1
-        ]);
     }
 
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function remove($id)
     {
-        $item = $this->repository->find($id);
-        if (empty($item)) {
-            return response()->json([
-                'success' => 0
-            ]);
+        try {
+            $this->commentsService->remove($id);
+            return response()->json(['success' => 1]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
         }
-
-        $this->service->remove($item);
-
-        return response()->json([
-            'success' => 1
-        ]);
     }
 }

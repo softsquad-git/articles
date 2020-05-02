@@ -12,75 +12,83 @@ use App\Services\Comments\ReplyCommentService;
 class ReplyCommentsController extends Controller
 {
     /**
-     * @var $repository
-     * @var $service
-     * @var $commentRepository
+     * @var ReplyCommentRepository
      */
-    private $repository;
-    private $service;
-    private $commentRepository;
+    private $replyCommentRepository;
 
-    public function __construct(ReplyCommentRepository $repository, ReplyCommentService $service, CommentRepository $commentRepository)
+    /**
+     * @var ReplyCommentService
+     */
+    private $replyCommentService;
+
+    /**
+     * ReplyCommentsController constructor.
+     * @param ReplyCommentRepository $replyCommentRepository
+     * @param ReplyCommentService $replyCommentService
+     * @param CommentRepository $commentRepository
+     */
+    public function __construct(
+        ReplyCommentRepository $replyCommentRepository,
+        ReplyCommentService $replyCommentService
+    )
     {
-        $this->service = $service;
-        $this->repository = $repository;
-        $this->commentRepository = $commentRepository;
+        $this->replyCommentRepository = $replyCommentRepository;
+        $this->replyCommentService = $replyCommentService;
     }
 
-    public function items($id)
+    /**
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function items(int $id)
     {
-        $comment = $this->commentRepository->find($id);
-        if (empty($comment)) {
-            return response()->json([
-                'success' => 0
-            ]);
+        try {
+            return AnswersCommentResource::collection($this->replyCommentRepository->getAnswersComment($id));
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
         }
-
-        $items = $this->repository->items($id);
-
-        return AnswersCommentResource::collection($items);
     }
 
+    /**
+     * @param ReplyCommentRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(ReplyCommentRequest $request)
     {
-        $item = $this->service->store($request->all());
-
-        return response()->json([
-            'success' => 1,
-            'item' => $item
-        ]);
+        try {
+            $this->replyCommentService->store($request->all());
+            return response()->json(['success' => 1]);
+        } catch (\Exception $e){
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        }
     }
 
-    public function update(ReplyCommentRequest $request, $id)
+    /**
+     * @param ReplyCommentRequest $request
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(ReplyCommentRequest $request, int $id)
     {
-        $item = $this->repository->find($id);
-        if (empty($item)) {
-            return response()->json([
-                'success' => 0
-            ]);
+        try {
+            $this->replyCommentService->update($request->all(), $id);
+            return response()->json(['success' => 1]);
+        } catch (\Exception $e){
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
         }
-
-        $item = $this->service->update($request->all(), $item);
-
-        return response()->json([
-            'success' => 1,
-            'item' => $item
-        ]);
     }
 
-    public function remove($id)
+    /**
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function remove(int $id)
     {
-        $item = $this->repository->find($id);
-        if (empty($item)) {
-            return response()->json([
-                'success' => 0
-            ]);
+        try {
+            $this->replyCommentService->remove($id);
+            return response()->json(['success' => 1]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
         }
-
-        $this->service->remove($item);
-
-        return response()->json([
-            'success' => 1
-        ]);
     }
 }

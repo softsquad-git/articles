@@ -11,18 +11,30 @@ use Illuminate\Http\Request;
 class ArticleController extends Controller
 {
     /**
-     * @var $repository
-     * @var $service
+     * @var ArticleRepository
      */
-    private $repository;
-    private $service;
+    private $articleRepository;
 
-    public function __construct(ArticleRepository $repository, ArticleService $service)
+    /**
+     * @var ArticleService
+     */
+    private $articleService;
+
+    /**
+     * ArticleController constructor.
+     * @param ArticleRepository $articleRepository
+     * @param ArticleService $articleService
+     */
+    public function __construct(ArticleRepository $articleRepository, ArticleService $articleService)
     {
-        $this->repository = $repository;
-        $this->service = $service;
+        $this->articleRepository = $articleRepository;
+        $this->articleService = $articleService;
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
     public function items(Request $request)
     {
         $search = [
@@ -30,21 +42,20 @@ class ArticleController extends Controller
             'category' => $request->input('category'),
             'location' => $request->input('location')
         ];
-        $items = $this->repository->items($search);
-
-        return ArticleResource::collection($items);
+        return ArticleResource::collection($this->articleRepository->getArticles($search));
     }
 
-    public function item($id)
+    /**
+     * @param int $id
+     * @return ArticleResource|\Illuminate\Http\JsonResponse
+     */
+    public function item(int $id)
     {
-        $item = $this->repository->find($id);
-        if (empty($item)) {
-            return response()->json([
-                'success' => 0
-            ]);
+        try {
+            $this->articleService->view($id);
+            return new ArticleResource($this->articleRepository->findArticle($id));
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
         }
-
-        $this->service->view($item);
-        return new ArticleResource($item);
     }
 }

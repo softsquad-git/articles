@@ -11,49 +11,59 @@ use Illuminate\Http\Request;
 class LikeController extends Controller
 {
     /**
-     * @var $repository
-     * @var $service
+     * @var LikeRepository
      */
-    private $repository;
-    private $service;
+    private $likeRepository;
 
-    public function __construct(LikeRepository $repository, LikeService $service)
+    /**
+     * @var LikeService
+     */
+    private $likeService;
+
+    /**
+     * LikeController constructor.
+     * @param LikeRepository $likeRepository
+     * @param LikeService $likeService
+     */
+    public function __construct(LikeRepository $likeRepository, LikeService $likeService)
     {
-        $this->repository = $repository;
-        $this->service = $service;
+        $this->likeRepository = $likeRepository;
+        $this->likeService = $likeService;
     }
 
+    /**
+     * @param LikeRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function like(LikeRequest $request)
     {
-        $resource_id = $request->resource_id;
-        $resource_type = $request->resource_type;
-        $data = $request->all();
-        $like = $this->repository->like($resource_id, $resource_type);
-        $item = $this->service->like($data, $like);
-
-        return response()->json([
-            'success' => 1,
-            'item' => $item
-        ]);
+        $params = [
+            'resource_id' => $request->resource_id,
+            'resource_type' => $request->resource_type
+        ];
+        try {
+            $this->likeService->like($request->all(), $params);
+            return response()->json(['success' => 1]);
+        } catch (\Exception $e){
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        }
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getLike(Request $request)
     {
-        $resource_id = $request->input('resource_id');
-        $resource_type = $request->input('resource_type');
-        if (empty($resource_id) || empty($resource_type)){
-            return response()->json([
-                'success' => 0
-            ]);
+        $params = [
+            'resource_id' => $request->input('resource_id'),
+            'resource_type' => $request->input('resource_type')
+        ];
+        try {
+            $like = $this->likeRepository->like($params);
+            return response()->json(['like' => $like->like]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
         }
-        $like = $this->repository->like($resource_id, $resource_type);
-        if (empty($like)){
-            return response()->json([
-                'msg' => null
-            ]);
-        }
-        return response()->json([
-            'like' => $like->like
-        ]);
     }
 }

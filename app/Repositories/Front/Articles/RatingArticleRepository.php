@@ -13,7 +13,7 @@ class RatingArticleRepository
         return RatingArticle::find($id);
     }
 
-    public static function getAverageRatings($id)
+    public static function getAverageRatings(int $id)
     {
         $ratings = RatingArticle::where('article_id', $id)
             ->get();
