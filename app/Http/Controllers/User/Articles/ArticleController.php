@@ -5,7 +5,6 @@ namespace App\Http\Controllers\User\Articles;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\Articles\ArticleRequest;
 use App\Http\Requests\User\Articles\ArticleUploadFileEditorRequest;
-use App\Http\Requests\User\Articles\ArticleUploadVideoEditorRequest;
 use App\Http\Requests\User\Articles\ArtilceImagesRequest;
 use App\Http\Resources\Articles\ArticleImagesResource;
 use App\Http\Resources\Articles\ArticleResource;
@@ -16,155 +15,165 @@ use Illuminate\Http\Request;
 class ArticleController extends Controller
 {
     /**
-     * @var $repository
-     * @var $service
+     * @var ArticleService
      */
-    private $service;
-    private $repository;
+    private $articleService;
 
-    public function __construct(ArticleRepository $repository, ArticleService $service)
+    /**
+     * @var ArticleRepository
+     */
+    private $articleRepository;
+
+    /**
+     * ArticleController constructor.
+     * @param ArticleRepository $articleRepository
+     * @param ArticleService $articleService
+     */
+    public function __construct(ArticleRepository $articleRepository, ArticleService $articleService)
     {
-        $this->repository = $repository;
-        $this->service = $service;
+        $this->articleRepository = $articleRepository;
+        $this->articleService = $articleService;
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
     public function items(Request $request)
     {
         $search = [
             'status' => $request->get('status')
         ];
-
-        $items = $this->repository->items($search);
-
-        return ArticleResource::collection($items);
+        return ArticleResource::collection($this->articleRepository->items($search));
     }
 
+    /**
+     * @param $id
+     * @return ArticleResource|\Illuminate\Http\JsonResponse
+     */
     public function item($id)
     {
-        $item = $this->repository->find($id);
-        if (empty($item)) {
-            return response()->json([
-                'success' => 0
-            ]);
+        try {
+            return new ArticleResource($this->articleRepository->find($id));
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
         }
-
-        return new ArticleResource($item);
     }
 
+    /**
+     * @param ArticleRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(ArticleRequest $request)
     {
-        $item = $this->service->store($request->all());
-        if ($request->hasFile('images'))
-            $this->service->uploadImages($item->id, $request->file('images'));
-
-        return response()->json([
-            'success' => 1,
-            'item' => $item
-        ]);
+        try {
+            $item = $this->articleService->store($request->all());
+            if ($request->hasFile('images'))
+                $this->articleService->uploadImages($item->id, $request->file('images'));
+            return response()->json(['success' => 1]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        }
     }
 
-    public function update(ArticleRequest $request, $id)
+    /**
+     * @param ArticleRequest $request
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(ArticleRequest $request, int $id)
     {
-        $item = $this->repository->find($id);
-        if (empty($item)) {
-            return response()->json([
-                'success' => 0
-            ]);
+        try {
+            $this->articleService->update($request->all(), $id);
+            return response()->json(['success' => 1]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
         }
-
-        $item = $this->service->update($request->all(), $item);
-
-        return response()->json([
-            'success' => 1,
-            'item' => $item
-        ]);
     }
 
-    public function remove($id)
+    /**
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function remove(int $id)
     {
-        $item = $this->repository->find($id);
-        if (empty($item)) {
-            return response()->json([
-                'success' => 0
-            ]);
+        try {
+            $this->articleService->remove($id);
+            return response()->json(['success' => 1]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
         }
-
-        $this->service->remove($item);
-
-        return response()->json([
-            'success' => 1
-        ]);
     }
 
-    public function uploadImages(ArtilceImagesRequest $request, $article_id)
+    /**
+     * @param ArtilceImagesRequest $request
+     * @param int $article_id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function uploadImages(ArtilceImagesRequest $request, int $article_id)
     {
-        $article = $this->repository->find($article_id);
-        if ($request->hasFile('images') && !empty($article)){
-            $images = $this->service->uploadImages($article_id, $request->file('images'));
-
-            return response()->json([
-                'success' => 1,
-                'items' => $images
-            ]);
+        try {
+            if ($request->hasFile('images')) {
+                $this->articleService->uploadImages($article_id, $request->file('images'));
+                return response()->json(['success' => 1]);
+            }
+            return response()->json(['msg' => 'Images not found']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
         }
-
-        return response()->json([
-            'success' => 0
-        ]);
     }
 
-    public function removeImage($id)
+    /**
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function removeImage(int $id)
     {
-        $item = $this->repository->findImage($id);
-        if (empty($item)){
-            return response()->json([
-                'success' => 0
-            ]);
+        try {
+            $this->articleService->removeImage($id);
+            return response()->json(['success' => 1]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
         }
-
-        $this->service->removeImage($item);
-
-        return response()->json([
-            'success' => 1
-        ]);
     }
 
-    public function archive($id)
+    /**
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function archive(int $id)
     {
-        $item = $this->repository->find($id);
-        if (empty($item)){
-            return response()->json([
-                'success' => 0
-            ]);
+        try {
+            $this->articleService->archive($id);
+            return response()->json(['success' => 1]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
         }
-
-        $item = $this->service->archive($item);
-
-        return response()->json([
-            'success' => 1,
-            'status' => $item->status
-        ]);
     }
 
-    public function uploadFileEditor(ArticleUploadFileEditorRequest $request){
-        if ($request->hasFile('file'))
-        {
-            $link = $this->service->uploadImageEditor($request->file('file'));
-            return [
-                'link' => $link
-            ];
+    /**
+     * @param ArticleUploadFileEditorRequest $request
+     * @return array|\Illuminate\Http\JsonResponse
+     */
+    public function uploadFileEditor(ArticleUploadFileEditorRequest $request)
+    {
+        if ($request->hasFile('file')) {
+            $link = $this->articleService->uploadImageEditor($request->file('file'));
+            return ['link' => $link];
         }
-        return response()->json([
-            'success' => 0
-        ]);
+        return response()->json(['success' => 0]);
     }
 
+    /**
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
     public function getImages(int $id)
     {
         try {
-            $items = $this->repository->getImages($id);
+            $items = $this->articleRepository->getImages($id);
             return ArticleImagesResource::collection($items);
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
         }
     }

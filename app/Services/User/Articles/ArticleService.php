@@ -5,6 +5,7 @@ namespace App\Services\User\Articles;
 use App\Helpers\Status;
 use App\Models\Articles\Article;
 use App\Models\Articles\ImagesArticle;
+use App\Repositories\User\Articles\ArticleRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
@@ -15,30 +16,64 @@ class ArticleService
     const IMAGES_ARTICLE_EDITOR_PATH = 'assets/data/articles/wysywig/';
     const RESOURCE_TYPE = 'ARTICLE';
 
+    /**
+     * @var ArticleRepository
+     */
+    private $articleRepository;
+
+    public function __construct(ArticleRepository $articleRepository)
+    {
+        $this->articleRepository = $articleRepository;
+    }
+
+    /**
+     * @param array $data
+     * @return Article
+     * @throws \Exception
+     */
     public function store(array $data): Article
     {
         $data['user_id'] = Auth::id();
         $item = Article::create($data);
-
+        if (empty($item))
+            throw new \Exception(sprintf('Try again'));
         return $item;
     }
 
-    public function update(array $data, Article $item): Article
+    /**
+     * @param array $data
+     * @param int $id
+     * @return Article
+     * @throws \Exception
+     */
+    public function update(array $data, int $id): Article
     {
+        $item = $this->articleRepository->find($id);
         $item->update($data);
-
         return $item;
     }
 
-    public function remove(Article $item)
+    /**
+     * @param int $id
+     * @return bool|null
+     * @throws \Exception
+     */
+    public function remove(int $id): ?bool
     {
-        $item->delete();
-
-        return true;
+        return $this->articleRepository->find($id)->delete();
     }
 
-    public function uploadImages($article_id, $images)
+    /**
+     * @param int $article_id
+     * @param array $images
+     * @return array
+     * @throws \Exception
+     */
+    public function uploadImages(int $article_id, array $images)
     {
+        $article = $this->articleRepository->find($article_id);
+        if (empty($article))
+            throw new \Exception(sprintf('Article not found'));
         $articles = [];
         $b_path = ArticleService::IMAGES_ARTICLE_PATH;
         foreach ($images as $image) {
@@ -56,28 +91,38 @@ class ArticleService
         return $articles;
     }
 
-    public function removeImage(ImagesArticle $item)
+    /**
+     * @param int $id
+     * @return bool|null
+     * @throws \Exception
+     */
+    public function removeImage(int $id): ?bool
     {
-        $item->delete();
-
-        return true;
+        $item = $this->articleRepository->findImage($id);
+        if (empty($item))
+            throw new \Exception(sprintf('Image not found'));
+        return $item->delete();
     }
 
-    public function archive(Article $item): Article
+    /**
+     * @param int $id
+     * @return Article
+     * @throws \Exception
+     */
+    public function archive(int $id): Article
     {
-        if ($item->status == Status::ARTICLE_ARCHIVE)
-        {
+        $item = $this->articleRepository->find($id);
+        if (empty($item))
+            throw new \Exception(sprintf('Article not found'));
+        if ($item->status == Status::ARTICLE_ARCHIVE) {
             $item->update([
                 'status' => Status::ARTICLE_PUBLISHED
             ]);
-
             return $item;
         }
-
         $item->update([
             'status' => Status::ARTICLE_ARCHIVE
         ]);
-
         return $item;
     }
 

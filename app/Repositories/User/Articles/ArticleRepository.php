@@ -23,9 +23,17 @@ class ArticleRepository
             ->paginate(20);
     }
 
-    public function find($id)
+    /**
+     * @param int $id
+     * @return mixed
+     * @throws \Exception
+     */
+    public function find(int $id)
     {
-        return Article::find($id);
+        $item = Article::find($id);
+        if (empty($item))
+            throw new \Exception(sprintf('Article not found'));
+        return $item;
     }
 
     public function findImage($id)
