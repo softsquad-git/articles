@@ -21,57 +21,72 @@ class FriendGroupPostsController extends Controller
      */
     private $groupPostsService;
 
+    /**
+     * FriendGroupPostsController constructor.
+     * @param GroupPostsService $groupPostsService
+     * @param GroupPostsRepository $groupPostsRepository
+     */
     public function __construct(GroupPostsService $groupPostsService, GroupPostsRepository $groupPostsRepository)
     {
         $this->groupPostsService = $groupPostsService;
         $this->groupPostsRepository = $groupPostsRepository;
     }
 
+    /**
+     * @param Request $request
+     * @param int $group_id
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
     public function items(Request $request, int $group_id)
     {
         $params = [
             'ordering' => $request->input('ordering')
         ];
-
-        return GroupPostsResource::collection($this->groupPostsRepository->items($params, $group_id));
-    }
-
-    public function store(FriendGroupsPostsRequest $request)
-    {
         try {
-            $item = $this->groupPostsService->store($request->all());
-
-            return response()->json([
-                'success' => 1,
-                'item' => $item
-            ]);
+            return GroupPostsResource::collection($this->groupPostsRepository->items($params, $group_id));
         } catch (\Exception $e) {
             return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
         }
     }
 
+    /**
+     * @param FriendGroupsPostsRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function store(FriendGroupsPostsRequest $request)
+    {
+        try {
+            $this->groupPostsService->store($request->all());
+            return response()->json(['success' => 1]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        }
+    }
+
+    /**
+     * @param FriendGroupsPostsRequest $request
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function update(FriendGroupsPostsRequest $request, int $id)
     {
         try {
-            $item = $this->groupPostsService->update($request->all(), $id);
-
-            return response()->json([
-                'success' => 1,
-                'item' => $item
-            ]);
+            $this->groupPostsService->update($request->all(), $id);
+            return response()->json(['success' => 1]);
         } catch (\Exception $e) {
             return response()->json(['success' => 1, 'msg' => $e->getMessage()]);
         }
     }
 
+    /**
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function remove(int $id)
     {
         try {
             $this->groupPostsService->remove($id);
-
-            return response()->json([
-                'success' => 1
-            ]);
+            return response()->json(['success' => 1]);
         } catch (\Exception $e) {
             return response()->json(['success' => 1, 'msg' => $e->getMessage()]);
         }

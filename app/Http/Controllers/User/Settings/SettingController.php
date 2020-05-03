@@ -9,72 +9,94 @@ use App\Http\Requests\User\Settings\UpdateAvatarRequest;
 use App\Http\Requests\User\Settings\UpdateEmailUserRequest;
 use App\Repositories\User\Settings\SettingRepository;
 use App\Services\User\Settings\SettingService;
-use Illuminate\Http\Request;
 
 class SettingController extends Controller
 {
     /**
-     * @var $service
-     * @var $repository
+     * @var SettingService
      */
-    private $service;
-    private $repository;
+    private $settingService;
+    /**
+     * @var SettingRepository
+     */
+    private $settingRepository;
 
-    public function __construct(SettingService $service, SettingRepository $repository)
+    /**
+     * SettingController constructor.
+     * @param SettingService $settingService
+     * @param SettingRepository $settingRepository
+     */
+    public function __construct(SettingService $settingService, SettingRepository $settingRepository)
     {
-        $this->service = $service;
-        $this->repository = $repository;
+        $this->settingService = $settingService;
+        $this->settingRepository = $settingRepository;
     }
 
+    /**
+     * @param SettingRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function updateBasicData(SettingRequest $request)
     {
-        $item = $this->repository->findSpecificDataUser();
-        $item = $this->service->updateBasicData($request->all(), $item);
-        return response()->json([
-            'success' => 1,
-            'item' => $item
-        ]);
+        try {
+            $this->settingService->updateBasicData($request->all());
+            return response()->json(['success' => 1]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        }
     }
 
+    /**
+     * @param TryUpdateEmailUserRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function tryUpdateEmailUser(TryUpdateEmailUserRequest $request)
     {
-        $tmp = $this->repository->findTmpChangeEmail();
-        $this->service->tryUpdateEmailUser($request->all(), $tmp);
-        return response()->json([
-            'success' => 1
-        ]);
+        try {
+            $this->settingService->tryUpdateEmailUser($request->all());
+            return response()->json(['success' => 1]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        }
     }
 
+    /**
+     * @param UpdateEmailUserRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function updateEmailUser(UpdateEmailUserRequest $request)
     {
-        $tmp = $this->repository->findTmpChangeEmail();
-        if ($tmp->_key != $request->_key){
-            return response()->json([
-                'success' => 0
-            ]);
+        try {
+            $this->settingService->updateEmailUser($request->_key);
+            return response()->json(['success' => 1]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
         }
-        $user = $this->repository->findUser();
-        $item = $this->service->updateEmailUser($tmp, $user);
-        return response()->json([
-            'success' => 1,
-            'item' => $item
-        ]);
     }
 
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function checkTmpEmail()
     {
-        return response()->json([
-            'is_tmp' => $this->repository->findTmpChangeEmail() ? 1 : 0
-        ]);
+        try {
+            return response()->json(['is_tmp' => $this->settingRepository->findTmpChangeEmail() ? 1 : 0]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        }
     }
 
+    /**
+     * @param UpdateAvatarRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function updateAvatar(UpdateAvatarRequest $request)
     {
-        $user_avatar = $this->repository->findAvatarUser();
-        $item = $this->service->updateAvatar($request->file('avatar'), $user_avatar);
-        return response()->json([
-            'success' => 1,
-            'item' => $item
-        ]);
+        try {
+            $this->settingService->updateAvatar($request->file('avatar'));
+            return response()->json(['success' => 1]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        }
     }
 }

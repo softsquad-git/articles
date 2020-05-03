@@ -21,22 +21,39 @@ class FriendGroupController extends Controller
      */
     private $groupService;
 
+    /**
+     * FriendGroupController constructor.
+     * @param GroupRepository $groupRepository
+     * @param GroupService $groupService
+     */
     public function __construct(GroupRepository $groupRepository, GroupService $groupService)
     {
         $this->groupRepository = $groupRepository;
         $this->groupService = $groupService;
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
     public function items(Request $request)
     {
         $params = [
             'name' => $request->input('name'),
             'ordering' => $request->input('ordering')
         ];
-        return GroupResource::collection($this->groupRepository->items($params));
+        try {
+            return GroupResource::collection($this->groupRepository->items($params));
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        }
     }
 
-    public function item($id)
+    /**
+     * @param int $id
+     * @return GroupResource|\Illuminate\Http\JsonResponse
+     */
+    public function item(int $id)
     {
         try {
             $item = $this->groupRepository->findGroup($id);
@@ -48,42 +65,44 @@ class FriendGroupController extends Controller
         }
     }
 
+    /**
+     * @param FriendGroupsRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(FriendGroupsRequest $request)
     {
         try {
-            $item = $this->groupService->store($request->all());
-
-            return response()->json([
-                'success' => 1,
-                'item' => $item
-            ]);
+            $this->groupService->store($request->all());
+            return response()->json(['success' => 1]);
         } catch (\Exception $e) {
             return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
         }
     }
 
+    /**
+     * @param FriendGroupsRequest $request
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function update(FriendGroupsRequest $request, int $id)
     {
         try {
-            $item = $this->groupService->update($request->all(), $id);
-
-            return response()->json([
-                'success' => 1,
-                'item' => $item
-            ]);
+            $this->groupService->update($request->all(), $id);
+            return response()->json(['success' => 1]);
         } catch (\Exception $e) {
             return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
         }
     }
 
+    /**
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function remove(int $id)
     {
         try {
             $this->groupService->remove($id);
-
-            return response()->json([
-                'success' => 1
-            ]);
+            return response()->json(['success' => 1]);
         } catch (\Exception $e) {
             return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
         }

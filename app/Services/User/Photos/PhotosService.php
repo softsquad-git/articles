@@ -3,15 +3,49 @@
 namespace App\Services\User\Photos;
 
 use App\Models\Users\Photos\Photos;
+use App\Repositories\User\Photos\AlbumPhotosRepository;
+use App\Repositories\User\Photos\PhotosRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class PhotosService
 {
+    /**
+     * @var AlbumPhotosRepository
+     */
+    private $albumPhotosRepository;
+
+    /**
+     * @var PhotosRepository
+     */
+    private $photosRepository;
+
+    /**
+     * PhotosService constructor.
+     * @param AlbumPhotosRepository $albumPhotosRepository
+     * @param PhotosRepository $photosRepository
+     */
+    public function __construct(AlbumPhotosRepository $albumPhotosRepository, PhotosRepository $photosRepository)
+    {
+        $this->albumPhotosRepository = $albumPhotosRepository;
+        $this->photosRepository = $photosRepository;
+    }
+
     const PATH_PHOTOS = 'assets/data/user/photos/';
 
+    /**
+     * @param int $album_id
+     * @param array $photos
+     * @return array
+     * @throws \Exception
+     */
     public function store(int $album_id, array $photos): array
     {
+        if ($album_id > 0) {
+            $album = $this->albumPhotosRepository->find($album_id);
+            if (empty($album))
+                throw new \Exception(sprintf('Album not found'));
+        }
         $photosUser = [];
         $b_path = PhotosService::PATH_PHOTOS;
         foreach ($photos as $photo){
@@ -28,14 +62,15 @@ class PhotosService
     }
 
     /**
-     * @param Photos $item
+     * @param int $id
      * @return bool|null
      * @throws \Exception
      */
-    public function remove(Photos $item): ?bool
+    public function remove(int $id): ?bool
     {
+        $item = $this->photosRepository->find($id);
         if (empty($item))
-            throw new \Exception('Photo not found');
+            throw new \Exception(sprintf('Photo not found'));
         return $item->delete();
     }
 

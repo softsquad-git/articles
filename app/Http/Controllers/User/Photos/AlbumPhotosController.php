@@ -13,61 +13,81 @@ class AlbumPhotosController extends Controller
 {
     /**
      * @var AlbumPhotosRepository
+     */
+    private $albumPhotosRepository;
+    /**
      * @var AlbumPhotosService
      */
-    private $repository;
-    private $service;
+    private $albumPhotosService;
 
-    public function __construct(AlbumPhotosRepository $repository, AlbumPhotosService $service)
+    /**
+     * AlbumPhotosController constructor.
+     * @param AlbumPhotosRepository $albumPhotosRepository
+     * @param AlbumPhotosService $albumPhotosService
+     */
+    public function __construct(AlbumPhotosRepository $albumPhotosRepository, AlbumPhotosService $albumPhotosService)
     {
-        $this->repository = $repository;
-        $this->service = $service;
+        $this->albumPhotosRepository = $albumPhotosRepository;
+        $this->albumPhotosService = $albumPhotosService;
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
     public function items(Request $request)
     {
         $params = [
             'name' => $request->input('name'),
             'order_by' => $request->input('order_by')
         ];
-        return AlbumPhotosResource::collection($this->repository->items($params));
+        try {
+            return AlbumPhotosResource::collection($this->albumPhotosRepository->items($params));
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        }
     }
 
+    /**
+     * @param AlbumPhotosRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(AlbumPhotosRequest $request)
     {
-        $item = $this->service->store($request->all());
-        return response()->json([
-            'success' => 1,
-            'item' => $item
-        ]);
+        try {
+            $this->albumPhotosService->store($request->all());
+            return response()->json(['success' => 1]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        }
     }
 
-    public function update(AlbumPhotosRequest $request, $id)
+    /**
+     * @param AlbumPhotosRequest $request
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(AlbumPhotosRequest $request, int $id)
     {
-        $item = $this->repository->find($id);
-        if (empty($item)) {
-            return response()->json([
-                'success' => 0
-            ]);
+        try {
+            $this->albumPhotosService->update($request->all(), $id);
+            return response()->json(['success' => 1]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
         }
-        $item = $this->service->update($request->all(), $item);
-        return response()->json([
-            'success' => 1,
-            'item' => $item
-        ]);
     }
 
-    public function remove($id)
+    /**
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function remove(int $id)
     {
-        $item = $this->repository->find($id);
-        if (empty($item)) {
-            return response()->json([
-                'success' => 0
-            ]);
+        try {
+            $this->albumPhotosService->remove($id);
+            return response()->json(['success' => 1]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
         }
-        $this->service->remove($item);
-        return response()->json([
-            'success' => 1
-        ]);
     }
 }

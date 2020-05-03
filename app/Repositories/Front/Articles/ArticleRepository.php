@@ -23,7 +23,7 @@ class ArticleRepository
             $items->where('location', $location);
 
         return $items
-            ->paginate(20);
+            ->paginate(12);
     }
 
     /**

@@ -5,7 +5,6 @@ namespace App\Http\Controllers\User\Friends;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\Friends\FriendRequest;
 use App\Http\Resources\Friends\FriendResource;
-use App\Http\Resources\Users\UserResource;
 use App\Repositories\User\Friends\FriendRepository;
 use App\Services\User\Friends\FriendService;
 use Illuminate\Http\Request;
@@ -15,15 +14,22 @@ class FriendController extends Controller
 {
     /**
      * @var FriendService
+     */
+    private $friendService;
+    /**
      * @var FriendRepository
      */
-    private $service;
-    private $repository;
+    private $friendRepository;
 
-    public function __construct(FriendService $service, FriendRepository $repository)
+    /**
+     * FriendController constructor.
+     * @param FriendService $friendService
+     * @param FriendRepository $friendRepository
+     */
+    public function __construct(FriendService $friendService, FriendRepository $friendRepository)
     {
-        $this->service = $service;
-        $this->repository = $repository;
+        $this->friendService = $friendService;
+        $this->friendRepository = $friendRepository;
     }
 
     /**
@@ -33,10 +39,10 @@ class FriendController extends Controller
     public function friends(Request $request)
     {
         try {
-            $items = $this->repository->getFriends(Auth::id(), $request->input('name'));
+            $items = $this->friendRepository->getFriends(Auth::id(), $request->input('name'));
             return FriendResource::collection($items);
         } catch (\Exception $e){
-            return response()->json($e->getMessage());
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
         }
     }
 
@@ -47,29 +53,35 @@ class FriendController extends Controller
     public function store(FriendRequest $request)
     {
         try {
-            $this->service->store($request->recipient_id);
-            return response()->json([
-                'success' => 1,
-            ]);
+            $this->friendService->store($request->recipient_id);
+            return response()->json(['success' => 1]);
         } catch (\Exception $e) {
-            return response()->json($e->getMessage());
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
         }
     }
 
     /**
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function sentInvitations()
     {
-        return FriendResource::collection($this->repository->sentInvitations());
+        try {
+            return FriendResource::collection($this->friendRepository->sentInvitations());
+        } catch (\Exception $e){
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        }
     }
 
     /**
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function waitingInvitations()
     {
-        return FriendResource::collection($this->repository->waitingInvitations());
+        try {
+            return FriendResource::collection($this->friendRepository->waitingInvitations());
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        }
     }
 
     /**
@@ -79,10 +91,8 @@ class FriendController extends Controller
     public function remove(int $id)
     {
         try {
-            $this->service->remove($id);
-            return response()->json([
-                'success' => 1
-            ]);
+            $this->friendService->remove($id);
+            return response()->json(['success' => 1]);
         } catch (\Exception $e) {
             return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
         }
@@ -95,10 +105,8 @@ class FriendController extends Controller
     public function acceptInvitation(int $id)
     {
         try {
-            $this->service->acceptInvitation($id);
-            return response()->json([
-                'success' => 1
-            ]);
+            $this->friendService->acceptInvitation($id);
+            return response()->json(['success' => 1]);
         } catch (\Exception $e) {
             return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
         }
