@@ -47,7 +47,7 @@ class GroupUsersRepository
         return FriendGroupsUser::where('user_id', Auth::id())
             ->where('status', $status)
             ->orderBy('id', $ordering ?? 'DESC')
-            ->get();
+            ->paginate(10);
     }
 
 }

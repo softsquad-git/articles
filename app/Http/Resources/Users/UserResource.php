@@ -18,6 +18,8 @@ class UserResource extends JsonResource
         $data = parent::toArray($request);
         $data['avatar'] = Avatar::src($this->id);
         $data['s'] = $this->specificData;
+        $data['articles'] = $this->articles->count();
+        $data['photos'] = $this->photos->count();
 
         return $data;
     }

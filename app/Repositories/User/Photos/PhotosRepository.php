@@ -14,7 +14,7 @@ class PhotosRepository
             'user_id' => Auth::id(),
             'album_id' => $album_id
         ])->orderBy('id', 'DESC')
-            ->paginate(10);
+            ->paginate(8);
     }
 
     public function find($id)

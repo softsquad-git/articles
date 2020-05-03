@@ -20,7 +20,7 @@ class ArticleRepository
             $items->where('status', $status);
 
         return $items
-            ->paginate(20);
+            ->paginate(10);
     }
 
     /**

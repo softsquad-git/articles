@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Home;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Articles\ArticleResource;
 use App\Http\Resources\Categories\CategoryResource;
+use App\Http\Resources\User\Photos\PhotosResource;
 use App\Repositories\HomePage\HomeRepository;
 
 class HomePageController extends Controller
@@ -58,5 +59,21 @@ class HomePageController extends Controller
     public function getArticlesAuthorService()
     {
         return ArticleResource::collection($this->homeRepository->getArticlesAuthorService());
+    }
+
+    /**
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function getFeaturedArticles()
+    {
+        return ArticleResource::collection($this->homeRepository->getFeaturedArticles());
+    }
+
+    /**
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function getLatestPhotos()
+    {
+        return PhotosResource::collection($this->homeRepository->getLatestPhotos());
     }
 }

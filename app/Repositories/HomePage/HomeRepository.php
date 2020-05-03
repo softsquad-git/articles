@@ -5,6 +5,7 @@ namespace App\Repositories\HomePage;
 use App\Helpers\Status;
 use App\Models\Articles\Article;
 use App\Models\Categories\Category;
+use App\Models\Users\Photos\Photos;
 use App\Repositories\Categories\CategoryRepository;
 
 class HomeRepository
@@ -63,6 +64,21 @@ class HomeRepository
         return Article::orderBy('id', 'DESC')
             ->where('status', Status::ARTICLE_AUTHOR)
             ->limit(20)
+            ->get();
+    }
+
+    public function getFeaturedArticles()
+    {
+        return Article::orderBy('id', 'DESC')
+            ->where('status', Status::FEATURED)
+            ->limit(5)
+            ->get();
+    }
+
+    public function getLatestPhotos()
+    {
+        return Photos::orderBy('id', 'DESC')
+            ->limit(16)
             ->get();
     }
 

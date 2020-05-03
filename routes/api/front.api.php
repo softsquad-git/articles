@@ -42,4 +42,6 @@ Route::group(['prefix' => 'home'], function (){
     Route::post('categories', 'Home\HomePageController@getCategories');
     Route::post('articles-from-category/{id}', 'Home\HomePageController@getArticleFromCategory');
     Route::post('articles-author-service', 'Home\HomePageController@getArticlesAuthorService');
+    Route::post('articles-featured', 'Home\HomePageController@getFeaturedArticles');
+    Route::post('latest-photos', 'Home\HomePageController@getLatestPhotos');
 });

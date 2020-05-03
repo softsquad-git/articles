@@ -19,7 +19,7 @@ class FriendRepository
         }
 
         return $items
-            ->paginate(20);
+            ->paginate(12);
     }
 
 }

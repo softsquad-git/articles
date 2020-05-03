@@ -21,7 +21,7 @@ class GroupRepository
             $items->where('name', 'like', '%' . $name . '%');
 
         return $items
-            ->paginate(20);
+            ->paginate(10);
     }
 
     /**

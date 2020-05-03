@@ -10,6 +10,7 @@ use App\Models\Follows\Follow;
 use App\Models\Likes\Like;
 use App\Models\Users\Avatar;
 use App\Models\Users\Photos\AlbumPhotos;
+use App\Models\Users\Photos\Photos;
 use App\Models\Users\SpecificData;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -87,6 +88,11 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->belongsToMany(User::class, 'friends', 'sender_id', 'recipient_id')
             ->withPivot('status');
+    }
+
+    public function photos()
+    {
+        return $this->hasMany(Photos::class, 'user_id');
     }
 
 }

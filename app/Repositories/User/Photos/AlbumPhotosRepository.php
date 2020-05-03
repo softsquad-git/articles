@@ -14,7 +14,7 @@ class AlbumPhotosRepository
             $items->where('name', 'like', '%' . $params['name'] . '%');
 
         return $items
-            ->paginate(10);
+            ->paginate(6);
     }
 
     public function find($id)
