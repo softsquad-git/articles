@@ -42,4 +42,17 @@ class FollowService
         return $follow;
     }
 
+    /**
+     * @param int $id
+     * @return mixed
+     * @throws \Exception
+     */
+    public function remove(int $id)
+    {
+        $item = $this->followRepository->findFollow($id);
+        if (empty($item))
+            throw new \Exception(sprintf('Item not found'));
+        return $item->delete();
+    }
+
 }

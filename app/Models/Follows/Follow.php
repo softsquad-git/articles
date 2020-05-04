@@ -2,6 +2,8 @@
 
 namespace App\Models\Follows;
 
+use App\Models\Articles\Article;
+use App\Services\User\Articles\ArticleService;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
 

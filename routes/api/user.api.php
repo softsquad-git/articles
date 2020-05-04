@@ -35,6 +35,11 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth:api'], function () {
             Route::post('store', 'User\Photos\PhotoController@store');
             Route::post('remove/{id}', 'User\Photos\PhotoController@remove');
         });
+        Route::group(['prefix' => 'follows'], function () {
+            Route::post('get/{resource_type}', 'Follows\FollowController@getFollows');
+            Route::post('watching-you', 'Follows\FollowController@getWatchingYou');
+            Route::post('remove/{id}', 'Follows\FollowController@unFollow');
+        });
         Route::group(['prefix' => 'friends'], function () {
             Route::post('', 'User\Friends\FriendController@friends');
             Route::post('add', 'User\Friends\FriendController@store');

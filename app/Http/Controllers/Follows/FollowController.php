@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Follows;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Follows\FollowRequest;
+use App\Http\Resources\Follows\FollowResource;
 use App\Repositories\Follows\FollowRepository;
 use App\Services\Follows\FollowService;
 use Illuminate\Http\Request;
@@ -63,5 +64,33 @@ class FollowController extends Controller
         }
         $follow = $this->followRepository->follow($resource_id, $resource_type);
         return response()->json(['follow' => $follow ? true : false]);
+    }
+
+    public function getFollows(string $resource_type)
+    {
+        try {
+            $items = $this->followRepository->getFollows($resource_type);
+            return FollowResource::collection($items);
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        }
+    }
+
+    public function getWatchingYou(){
+        try {
+            $items = $this->followRepository->getWatchingYou();
+            return FollowResource::collection($items);
+        } catch (\Exception $e){
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        }
+    }
+
+    public function unFollow(int $id) {
+        try {
+            $this->followService->remove($id);
+            return response()->json(['success' => 1]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        }
     }
 }

@@ -22,4 +22,27 @@ class FollowRepository
         ])->first();
     }
 
+    public function getFollows(string $resource_type)
+    {
+        return Follow::where([
+            'user_id' => Auth::id(),
+            'resource_type' => $resource_type
+        ])->orderBy('id', 'DESC')
+            ->paginate(10);
+    }
+
+    public function getWatchingYou()
+    {
+        return Follow::where([
+            'resource_id' => Auth::id(),
+            'resource_type' => 'USER'
+        ])->orderBy('id', 'DESC')
+            ->paginate(10);
+    }
+
+    public function findFollow(int $id)
+    {
+        return Follow::find($id);
+    }
+
 }
