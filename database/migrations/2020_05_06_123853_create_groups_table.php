@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFriendshipGroupsTable extends Migration
+class CreateGroupsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,14 @@ class CreateFriendshipGroupsTable extends Migration
      */
     public function up()
     {
-        Schema::create('friendship_groups', function (Blueprint $table) {
+        Schema::create('groups', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id')->index();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->string('type');
-            $table->integer('status')->nullable();
+            $table->string('bg_image')->nullable();
+            $table->string('type')->default('PUBLIC'); # PUBLIC \ PRIVATE
             $table->boolean('is_accept_post')->default(1);
-            $table->integer('is_view')->default(1);
+            $table->integer('status')->default(1);
             $table->timestamps();
         });
     }
@@ -33,6 +32,6 @@ class CreateFriendshipGroupsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('friendship_groups');
+        Schema::dropIfExists('groups');
     }
 }

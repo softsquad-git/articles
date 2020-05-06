@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\User\Friends;
+namespace App\Http\Requests\User\Groups;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class FriendGroupsRequest extends FormRequest
+class GroupRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,7 @@ class FriendGroupsRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string',
-            'description' => 'nullable',
-            'type' => 'required'
+            //
         ];
     }
 }

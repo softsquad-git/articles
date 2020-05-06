@@ -1,19 +1,20 @@
 <?php
 
-namespace App\Models\Friends\Groups;
+namespace App\Models\Users\Groups;
 
 use App\User;
 use Illuminate\Database\Eloquent\Model;
 
-class FriendGroupsUser extends Model
+class UsersGroup extends Model
 {
-    protected $table = 'friendship_groups_users';
+    protected $table = 'groups_users';
 
     protected $fillable = [
         'user_id',
         'group_id',
         'is_admin',
-        'status'
+        'status',
+        'is_author'
     ];
 
     public function user()
@@ -23,6 +24,6 @@ class FriendGroupsUser extends Model
 
     public function group()
     {
-        return $this->belongsTo(FriendGroups::class);
+        return $this->belongsTo(Group::class);
     }
 }
