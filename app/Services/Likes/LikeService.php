@@ -29,7 +29,7 @@ class LikeService
      */
     public function like(array $data, array $params)
     {
-        $item = $this->likeRepository->like($params['resource_id'], $params['resource_type']);
+        $item = $this->likeRepository->like($params);
         $data['user_id'] = Auth::id();
         // add like or dislike
         if (empty($item)){

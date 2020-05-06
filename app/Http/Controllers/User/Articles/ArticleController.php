@@ -157,8 +157,8 @@ class ArticleController extends Controller
      */
     public function uploadFileEditor(ArticleUploadFileEditorRequest $request)
     {
-        if ($request->hasFile('file')) {
-            $link = $this->articleService->uploadImageEditor($request->file('file'));
+        if ($request->hasFile('upload')) {
+            $link = $this->articleService->uploadImageEditor($request->file('upload'));
             return ['link' => $link];
         }
         return response()->json(['success' => 0]);

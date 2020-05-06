@@ -47,27 +47,23 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth:api'], function () {
             Route::post('waiting', 'User\Friends\FriendController@waitingInvitations');
             Route::post('remove/{id}', 'User\Friends\FriendController@remove');
             Route::post('accept/{id}', 'User\Friends\FriendController@acceptInvitation');
-            Route::group(['prefix' => 'groups'], function () {
-                Route::post('', 'User\Friends\Groups\FriendGroupController@items');
-                Route::post('store', 'User\Friends\Groups\FriendGroupController@store');
-                Route::post('update/{id}', 'User\Friends\Groups\FriendGroupController@update');
-                Route::post('remove/{id}', 'User\Friends\Groups\FriendGroupController@remove');
-                Route::post('preview/{id}', 'User\Friends\Groups\FriendGroupController@item');
-                Route::group(['prefix' => 'belong-to'], function (){
-                    Route::post('', 'User\Friends\Groups\FriendGroupUserController@getGroupsBelongTo');
-                });
-                Route::group(['prefix' => 'users'], function () {
-                    Route::post('get/{group_id}', 'User\Friends\Groups\FriendGroupUserController@items');
-                    Route::post('store', 'User\Friends\Groups\FriendGroupUserController@store');
-                    Route::post('remove/{id}', 'User\Friends\Groups\FriendGroupUserController@remove');
-                    Route::post('update-status/{group_id}/{status}', 'User\Friends\Groups\FriendGroupUserController@updateStatus');
-                });
-                Route::group(['prefix' => 'posts'], function () {
-                    Route::post('get/{group_id}', 'User\Friends\Groups\FriendGroupPostsController@items');
-                    Route::post('store', 'User\Friends\Groups\FriendGroupPostsController@store');
-                    Route::post('update/{id}', 'User\Friends\Groups\FriendGroupPostsController@update');
-                    Route::post('remove/{id}', 'User\Friends\Groups\FriendGroupPostsController@remove');
-                });
+        });
+        Route::group(['prefix' => 'groups'], function () {
+            Route::post('', 'User\Groups\GroupController@getGroups');
+            Route::post('store', 'User\Groups\GroupController@store');
+            Route::post('update/{id}', 'User\Groups\GroupController@update');
+            Route::post('remove/{id}', 'User\Groups\GroupController@remove');
+            Route::group(['prefix' => 'users'], function () {
+               Route::post('', 'User\Groups\UsersGroupController@getUsersGroup');
+               Route::post('store', 'User\Groups\UsersGroupController@store');
+               Route::post('update/{id}', 'User\Groups\UsersGroupController@update');
+               Route::post('remove/{id}', 'User\Groups\UsersGroupController@remove');
+            });
+            Route::group(['prefix' => 'posts'], function () {
+                Route::post('', 'User\Groups\PostsGroupController@getPostsGroup');
+                Route::post('store', 'User\Groups\PostsGroupController@store');
+                Route::post('update/{id}', 'User\Groups\PostsGroupController@update');
+                Route::post('remove/{id}', 'User\Groups\PostsGroupController@remove');
             });
         });
     });
