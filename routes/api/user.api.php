@@ -53,17 +53,22 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth:api'], function () {
             Route::post('store', 'User\Groups\GroupController@store');
             Route::post('update/{id}', 'User\Groups\GroupController@update');
             Route::post('remove/{id}', 'User\Groups\GroupController@remove');
+            Route::post('preview/{id}', 'User\Groups\GroupController@preview');
+            Route::post('images/{id}', 'User\Groups\GroupController@getAllImages');
             Route::group(['prefix' => 'users'], function () {
-               Route::post('', 'User\Groups\UsersGroupController@getUsersGroup');
+               Route::post('get/{id}', 'User\Groups\UsersGroupController@getUsersGroup');
                Route::post('store', 'User\Groups\UsersGroupController@store');
                Route::post('update/{id}', 'User\Groups\UsersGroupController@update');
                Route::post('remove/{id}', 'User\Groups\UsersGroupController@remove');
             });
             Route::group(['prefix' => 'posts'], function () {
-                Route::post('', 'User\Groups\PostsGroupController@getPostsGroup');
+                Route::post('get/{id}', 'User\Groups\PostsGroupController@getPostsGroup');
                 Route::post('store', 'User\Groups\PostsGroupController@store');
                 Route::post('update/{id}', 'User\Groups\PostsGroupController@update');
                 Route::post('remove/{id}', 'User\Groups\PostsGroupController@remove');
+                Route::post('images/{id}', 'User\Groups\PostsGroupController@getPostImages');
+                Route::post('images/remove/{id}', 'User\Groups\PostsGroupController@removeImagePost');
+                Route::post('images/upload/{id}', 'User\Groups\PostsGroupController@uploadImagesPost');
             });
         });
     });

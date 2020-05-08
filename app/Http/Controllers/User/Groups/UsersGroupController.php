@@ -44,7 +44,9 @@ class UsersGroupController extends Controller
         try {
             $params = [
                 'ordering' => $request->input('ordering'),
-                'group_id' => $id
+                'group_id' => $id,
+                'is_author' => $request->input('is_author'),
+                'is_admin' => $request->input('is_admin')
             ];
             return UsersGroupResource::collection($this->groupsUsersRepository->getUsersGroup($params));
         } catch (\Exception $e) {

@@ -2,10 +2,10 @@
 
 namespace App\Http\Resources\Users\Groups;
 
-use App\Http\Resources\Users\UserResource;
+use App\Services\User\Groups\GroupsPostsService;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UsersGroupResource extends JsonResource
+class PostsImagesGroupResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,9 +15,9 @@ class UsersGroupResource extends JsonResource
      */
     public function toArray($request)
     {
-        $data = parent::toArray($request);
-        $data['user'] = new UserResource($this->user);
-
-        return $data;
+        return [
+            'id' => $this->id,
+            'src' => asset(GroupsPostsService::GROUP_POST_IMAGES_PATH.$this->src)
+        ];
     }
 }

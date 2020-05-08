@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\User\Groups;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\User\Groups\PostImagesRequest;
 use App\Http\Requests\User\Groups\PostsGroupRequest;
 use App\Http\Resources\Users\Groups\PostsGroupResource;
+use App\Http\Resources\Users\Groups\PostsImagesGroupResource;
 use App\Repositories\User\Groups\GroupsPostsRepository;
 use App\Services\User\Groups\GroupsPostsService;
 use Illuminate\Http\Request;
@@ -55,7 +57,9 @@ class PostsGroupController extends Controller
     public function store(PostsGroupRequest $request)
     {
         try {
-            $this->groupsPostsService->store($request->all());
+            $group = $this->groupsPostsService->store($request->only(['group_id', 'content']));
+            if ($request->hasFile('images'))
+                $this->groupsPostsService->uploadPostImages($request->file('images'), $group->id);
             return response()->json(['success' => 1]);
         } catch (\Exception $e) {
             return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
@@ -85,6 +89,35 @@ class PostsGroupController extends Controller
     {
         try {
             $this->groupsPostsService->remove($id);
+            return response()->json(['success' => 1]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        }
+    }
+
+    public function getPostImages(int $id)
+    {
+        try {
+            return PostsImagesGroupResource::collection($this->groupsPostsRepository->getPostImages($id));
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        }
+    }
+
+    public function removeImagePost(int $id)
+    {
+        try {
+            $this->groupsPostsService->removePostImage($id);
+            return response()->json(['success' => 1]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        }
+    }
+
+    public function uploadImagesPost(PostImagesRequest $request, int $id)
+    {
+        try {
+            $this->groupsPostsService->uploadPostImages($request->file('images'), $id);
             return response()->json(['success' => 1]);
         } catch (\Exception $e) {
             return response()->json(['success' => 0, 'msg' => $e->getMessage()]);

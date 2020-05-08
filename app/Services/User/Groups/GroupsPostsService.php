@@ -4,13 +4,17 @@ namespace App\Services\User\Groups;
 
 use App\Helpers\GroupStatus;
 use App\Models\Users\Groups\PostsGroup;
+use App\Models\Users\Groups\PostsGroupImages;
 use App\Repositories\User\Groups\GroupsPostsRepository;
 use App\Repositories\User\Groups\GroupsRepository;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class GroupsPostsService
 {
-
+    const GROUP_POST_IMAGES_PATH = 'assets/data/user/groups/images/';
+    const RESOURCE_TYPE = 'POST_GROUP';
     /**
      * @var GroupsRepository
      */
@@ -76,6 +80,51 @@ class GroupsPostsService
         $item = $this->groupsPostsRepository->findGroupPost($id);
         if (empty($item))
             throw new \Exception(sprintf('Post %d not found in this group', $id));
+        return $item->delete();
+    }
+
+    /**
+     * @param array $images
+     * @param int $groupId
+     * @return array|bool
+     */
+    public function uploadPostImages(array $images, int $groupId)
+    {
+        try {
+            $articles = [];
+            $b_path = GroupsPostsService::GROUP_POST_IMAGES_PATH;
+            foreach ($images as $image) {
+                $file_name = md5(time() . Str::random(32)) . '.' . $image->getClientOriginalExtension();
+                $image->move($b_path, $file_name);
+                $article = PostsGroupImages::create([
+                    'user_id' => Auth::id(),
+                    'post_id' => $groupId,
+                    'src' => $file_name
+                ]);
+
+                $articles[] = $article;
+            }
+
+            return $articles;
+        } catch (\Exception $e) {
+            Log::error($e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            ]);
+            return false;
+        }
+    }
+
+    /**
+     * @param int $id
+     * @return bool|null
+     * @throws \Exception
+     */
+    public function removePostImage(int $id): ?bool
+    {
+        $item = $this->groupsPostsRepository->findImagePost($id);
+        if (empty($item))
+            throw new \Exception(sprintf('Image %d not found', $id));
         return $item->delete();
     }
 

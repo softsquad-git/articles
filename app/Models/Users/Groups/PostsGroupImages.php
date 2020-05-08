@@ -11,7 +11,7 @@ class PostsGroupImages extends Model
 
     protected $fillable = [
         'user_id',
-        'group_id',
+        'post_id',
         'src',
         'status'
     ];
@@ -21,8 +21,8 @@ class PostsGroupImages extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function group()
+    public function post()
     {
-        return $this->belongsTo(Group::class);
+        return $this->belongsTo(PostsGroup::class);
     }
 }
