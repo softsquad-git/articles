@@ -6,6 +6,7 @@ use App\Models\Articles\Article;
 use App\Models\Users\Photos\AlbumPhotos;
 use App\Models\Users\Photos\Photos;
 use App\Repositories\User\Photos\AlbumPhotosRepository;
+use App\Services\User\Photos\PhotosService;
 use App\User;
 
 class ProfileRepository
@@ -53,12 +54,22 @@ class ProfileRepository
         return $user->albums;
     }
 
+    /**
+     * @param int $id
+     * @return array
+     * @throws \Exception
+     */
     public function photos(int $id)
     {
         $album = $this->albumPhotosRepository->find($id);
         if (empty($album))
             throw new \Exception(sprintf('Album not found'));
-        return $album->photos;
+        $allImages = $album->photos;
+        $images = [];
+        foreach ($allImages as $img) {
+            $images[] = asset(PhotosService::PATH_PHOTOS . $img->src);
+        }
+        return $images;
     }
 
 }

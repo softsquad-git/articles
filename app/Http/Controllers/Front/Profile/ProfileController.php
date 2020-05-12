@@ -83,12 +83,15 @@ class ProfileController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return \Illuminate\Http\JsonResponse
      */
     public function photos(Request $request)
     {
         try {
-            return PhotosResource::collection($this->profileRepository->photos($request->input('album_id')));
+            $items = $this->profileRepository->photos($request->input('album_id'));
+            return response()->json([
+                'data' => $items
+            ]);
         } catch (\Exception $e) {
             return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
         }
