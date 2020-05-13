@@ -3,7 +3,6 @@
 namespace App\Mail\User;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
@@ -12,21 +11,13 @@ class VerifyEmailMail extends Mailable
     use Queueable, SerializesModels;
 
     public $data;
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
+
     public function __construct($data)
     {
+        $data['full_name'] = $data['user']->specificData->name.' ' . $data['user']->specificData->last_name;
         $this->data = $data;
     }
 
-    /**
-     * Build the message.
-     *
-     * @return $this
-     */
     public function build()
     {
         return $this->view('emails.user.verify-email');

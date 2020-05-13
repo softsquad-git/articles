@@ -3,6 +3,8 @@
 namespace App\Http\Resources\Users;
 
 use App\Helpers\Avatar;
+use App\Helpers\FriendshipStatus;
+use App\Helpers\Status;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
@@ -20,6 +22,7 @@ class UserResource extends JsonResource
         $data['s'] = $this->specificData;
         $data['articles'] = $this->articles->count();
         $data['photos'] = $this->photos->count();
+        $data['friends'] = $this->friends()->where('status', FriendshipStatus::FRIENDS)->count();
 
         return $data;
     }
