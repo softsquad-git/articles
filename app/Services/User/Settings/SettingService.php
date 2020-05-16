@@ -3,6 +3,7 @@
 namespace App\Services\User\Settings;
 
 use App\Helpers\Avatar;
+use App\Helpers\UpdateStatusUser;
 use App\Helpers\VerifyEmail;
 use App\Mail\User\SuccessUpdateEmailMail;
 use App\Mail\User\VerifyNewEmailUserMail;
@@ -55,10 +56,10 @@ class SettingService
         if (empty($item)) {
             $data['user_id'] = Auth::id();
             $item = ChangeEmail::create($data);
-            return Mail::to($item->tmp_email)->send(new VerifyNewEmailUserMail($item));
+            return Mail::to(Auth::user()->email)->send(new VerifyNewEmailUserMail($item));
         }
         $item->update($data);
-        return Mail::to($item->tmp_email)->send(new VerifyNewEmailUserMail($item));
+        return Mail::to(Auth::user()->email)->send(new VerifyNewEmailUserMail($item));
     }
 
     /**
@@ -77,7 +78,7 @@ class SettingService
         if (empty($item))
             throw new \Exception(sprintf('User not found'));
         $item->update(['email' => $tmp_item->tmp_email]);
-        Mail::to($item->email)->send(new SuccessUpdateEmailMail());
+        UpdateStatusUser::setActivateUser(0);
         $tmp_item->delete();
         return $item;
     }
@@ -102,6 +103,19 @@ class SettingService
             'user_id' => Auth::id(),
             'src' => $file_name
         ]);
+    }
+
+    /**
+     * @param bool $type
+     * @return mixed
+     */
+    public function setTemplateMode(bool $type)
+    {
+        $user = $this->settingRepository->findUser();
+        $user->update([
+            'dark_mode' => $type
+        ]);
+        return $user->dark_mode;
     }
 
 }

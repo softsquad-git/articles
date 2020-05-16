@@ -99,4 +99,18 @@ class SettingController extends Controller
             return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
         }
     }
+
+    /**
+     * @param bool $type
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function setTemplateMode(bool $type)
+    {
+        try{
+            $mode = $this->settingService->setTemplateMode($type);
+            return response()->json(['success' => 1, 'mode' => $mode]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        }
+    }
 }

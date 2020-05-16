@@ -19,6 +19,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->integer('activated')->default(0);
             $table->integer('locked')->default(0);
+            $table->boolean('dark_mode')->default(0);
             $table->timestamps();
         });
     }

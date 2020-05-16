@@ -1,6 +1,8 @@
 <?php
 Route::post('refresh-token', 'Auth\AuthController@refreshToken');
 Route::group(['prefix' => 'user', 'middleware' => 'auth:api'], function () {
+    Route::post('activate', 'Auth\AuthController@activate');
+    Route::post('activate-key-refresh', 'Auth\AuthController@refreshKeyActivate');
     Route::post('logout', 'Auth\AuthController@logout');
     Route::post('', 'LoggedController@user');
     Route::group(['middleware' => 'activated'], function () {
@@ -23,6 +25,7 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth:api'], function () {
             Route::post('update-email', 'User\Settings\SettingController@updateEmailUser');
             Route::post('check-tmp-email', 'User\Settings\SettingController@checkTmpEmail');
             Route::post('avatar', 'User\Settings\SettingController@updateAvatar');
+            Route::post('set-template-mode/{type}', 'User\Settings\SettingController@setTemplateMode');
         });
         Route::group(['prefix' => 'album-photos'], function () {
             Route::post('', 'User\Photos\AlbumPhotosController@items');

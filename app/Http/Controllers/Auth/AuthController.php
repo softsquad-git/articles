@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\ActivateRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Services\Auth\AuthService;
@@ -60,7 +61,9 @@ class AuthController extends Controller
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth('api')->factory()->getTTL() * 60,
-            'user_id' => Auth::id()
+            'user_id' => Auth::id(),
+            'success' => 1,
+            'dark_mode' => Auth::user()->dark_mode == 1 ? true : false
         ]);
     }
 
@@ -83,6 +86,26 @@ class AuthController extends Controller
             return $this->respondWithToken(Auth::guard('api')->refresh());
         } catch (\Exception $e){
             return response()->json($e->getMessage());
+        }
+    }
+
+    public function activate(ActivateRequest $request)
+    {
+        try {
+            $this->service->activate($request->all());
+            return response()->json(['success' => 1]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        }
+    }
+
+    public function refreshKeyActivate()
+    {
+        try {
+            $this->service->refreshKeyActivate();
+            return response()->json(['success' => 1]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
         }
     }
 }

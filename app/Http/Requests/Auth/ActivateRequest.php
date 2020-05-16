@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Comments;
+namespace App\Http\Requests\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ReplyCommentRequest extends FormRequest
+class ActivateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +24,7 @@ class ReplyCommentRequest extends FormRequest
     public function rules()
     {
         return [
-            'comment_id' => 'required|integer',
-            'content' => 'required'
+            '_key' => 'required|string|min:15|max:15'
         ];
     }
 }
