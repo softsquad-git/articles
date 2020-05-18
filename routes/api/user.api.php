@@ -6,6 +6,10 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth:api'], function () {
     Route::post('logout', 'Auth\AuthController@logout');
     Route::post('', 'LoggedController@user');
     Route::group(['middleware' => 'activated'], function () {
+        Route::group(['prefix' => 'chat'], function () {
+            Route::post('messages', 'Chat\ChatController@getMessages');
+            Route::post('send-message', 'Chat\ChatController@sendMessage');
+        });
         Route::group(['prefix' => 'articles'], function () {
             Route::post('', 'User\Articles\ArticleController@items');
             Route::post('item/{id}', 'User\Articles\ArticleController@item');
