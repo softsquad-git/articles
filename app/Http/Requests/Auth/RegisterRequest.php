@@ -24,6 +24,8 @@ class RegisterRequest extends FormRequest
     public function rules()
     {
         return [
+            'email' => 'required|email|unique:users',
+            'password' => 'required|string|min:8',
             'name' => 'required|string|min:3',
             'last_name' => 'required|string|min:3',
             'birthday' => 'required|date|date_format:Y-m-d',
@@ -32,7 +34,7 @@ class RegisterRequest extends FormRequest
             'post_code' => 'nullable|string',
             'address' => 'nullable|string',
             'sex' => 'required|string',
-            'terms' => 'required'
+            'terms' => 'required|accepted'
         ];
     }
 }

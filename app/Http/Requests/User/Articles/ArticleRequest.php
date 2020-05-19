@@ -27,9 +27,10 @@ class ArticleRequest extends FormRequest
             'title' => 'required|string|min:3',
             'category_id' => 'required|integer',
             'content' => 'required',
-            'is_comment' => 'required',
-            'is_rating' => 'required',
-            'location' => 'required'
+            'is_comment' => 'required|boolean',
+            'is_rating' => 'required|boolean',
+            'location' => 'required|string|min:3',
+            'images' => 'nullable|array'
         ];
     }
 }

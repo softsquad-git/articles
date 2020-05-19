@@ -5,8 +5,10 @@ namespace App\Http\Controllers\User\Settings;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\Settings\SettingRequest;
 use App\Http\Requests\User\Settings\TryUpdateEmailUserRequest;
+use App\Http\Requests\User\Settings\TryUpdatePasswordUserRequest;
 use App\Http\Requests\User\Settings\UpdateAvatarRequest;
 use App\Http\Requests\User\Settings\UpdateEmailUserRequest;
+use App\Http\Requests\User\Settings\UpdatePasswordUserRequest;
 use App\Repositories\User\Settings\SettingRepository;
 use App\Services\User\Settings\SettingService;
 
@@ -124,4 +126,15 @@ class SettingController extends Controller
             return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
         }
     }
+
+    public function updatePassword(UpdatePasswordUserRequest $request)
+    {
+        try {
+            $this->settingService->updatePassword($request->all());
+            return response()->json(['success' => 1]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        }
+    }
+
 }

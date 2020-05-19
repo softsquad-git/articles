@@ -24,7 +24,7 @@ class FriendRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'recipient_id' => 'required|integer'
         ];
     }
 }

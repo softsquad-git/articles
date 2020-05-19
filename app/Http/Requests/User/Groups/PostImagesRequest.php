@@ -24,7 +24,7 @@ class PostImagesRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'images' => 'nullable|array'
         ];
     }
 }

@@ -27,10 +27,10 @@ class SettingRequest extends FormRequest
             'name' => 'string|min:3',
             'last_name' => 'string|min:3',
             'birthday' => 'date|date_format:Y-m-d',
-            'number_phone' => 'string',
-            'city' => 'string|min:3',
-            'post_code' => 'string',
-            'address' => 'string',
+            'number_phone' => 'nullable|string',
+            'city' => 'nullable|string|min:3',
+            'post_code' => 'nullable|string',
+            'address' => 'nullable|string',
             'sex' => 'string'
         ];
     }

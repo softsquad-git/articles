@@ -11,6 +11,7 @@ use App\Models\Users\ChangeEmail;
 use App\Repositories\User\Settings\SettingRepository;
 use App\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
@@ -121,6 +122,23 @@ class SettingService
     public function removeAccount()
     {
         return User::find(Auth::id())->delete();
+    }
+
+    /**
+     * @param array $data
+     * @return mixed
+     * @throws \Exception
+     */
+    public function updatePassword(array $data)
+    {
+        $user = $this->settingRepository->findUser();
+        if (Hash::check($data['old_password'], $user->password)) {
+            $user->update([
+                'password' => Hash::make($data['new_password'])
+            ]);
+            return $user;
+        }
+        throw new \Exception('Podałeś nieprawidłowe hasło');
     }
 
 }

@@ -31,6 +31,7 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth:api'], function () {
             Route::post('check-tmp-email', 'User\Settings\SettingController@checkTmpEmail');
             Route::post('avatar', 'User\Settings\SettingController@updateAvatar');
             Route::post('set-template-mode/{type}', 'User\Settings\SettingController@setTemplateMode');
+            Route::post('update-password', 'User\Settings\SettingController@updatePassword');
         });
         Route::group(['prefix' => 'album-photos'], function () {
             Route::post('', 'User\Photos\AlbumPhotosController@items');

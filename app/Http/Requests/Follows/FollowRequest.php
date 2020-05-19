@@ -25,7 +25,7 @@ class FollowRequest extends FormRequest
     {
         return [
             'resource_id' => 'required|integer',
-            'resource_type' => 'required'
+            'resource_type' => 'required|string'
         ];
     }
 }

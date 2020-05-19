@@ -24,7 +24,7 @@ class TryUpdateEmailUserRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'tmp_email' => 'required|email'
         ];
     }
 }

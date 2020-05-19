@@ -4,6 +4,7 @@ namespace App\Repositories\User\Settings;
 
 use App\Models\Users\Avatar;
 use App\Models\Users\ChangeEmail;
+use App\Models\Users\ChangePassword;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 

@@ -24,7 +24,9 @@ class PostsGroupRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'group_id' => 'required|integer',
+            'content' => 'required|min:3',
+            'images' => 'nullable|array'
         ];
     }
 }

@@ -24,7 +24,7 @@ class SendVerifyKeyForgotPasswordRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'email' => 'required|email'
         ];
     }
 }

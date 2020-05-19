@@ -24,7 +24,8 @@ class PhotosRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'album_id' => 'required|integer',
+            'photos' => 'required|array'
         ];
     }
 }
