@@ -92,13 +92,13 @@ class ArticleController extends Controller
     }
 
     /**
-     * @param int $id
+     * @param int $articleId
      * @return \Illuminate\Http\JsonResponse
      */
-    public function remove(int $id)
+    public function remove(int $articleId)
     {
         try {
-            $this->articleService->remove($id);
+            $this->articleService->remove($articleId);
             return response()->json(['success' => 1]);
         } catch (\Exception $e) {
             return response()->json(['success' => 0, 'msg' => $e->getMessage()]);

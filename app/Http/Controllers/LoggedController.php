@@ -29,9 +29,4 @@ class LoggedController extends Controller
         return new UserResource($this->loggedRepository->user());
     }
 
-    public function deleteAccount()
-    {
-
-    }
-
 }

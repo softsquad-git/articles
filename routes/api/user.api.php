@@ -1,6 +1,7 @@
 <?php
 Route::post('refresh-token', 'Auth\AuthController@refreshToken');
 Route::group(['prefix' => 'user', 'middleware' => 'auth:api'], function () {
+    Route::post('remove-account', 'User\Settings\SettingController@removeAccount');
     Route::post('activate', 'Auth\AuthController@activate');
     Route::post('activate-key-refresh', 'Auth\AuthController@refreshKeyActivate');
     Route::post('logout', 'Auth\AuthController@logout');

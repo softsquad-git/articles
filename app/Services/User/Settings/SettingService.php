@@ -118,4 +118,9 @@ class SettingService
         return $user->dark_mode;
     }
 
+    public function removeAccount()
+    {
+        return User::find(Auth::id())->delete();
+    }
+
 }

@@ -113,4 +113,15 @@ class SettingController extends Controller
             return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
         }
     }
+
+    public function removeAccount()
+    {
+        try {
+            $this->settingService->removeAccount();
+            return response()->json(['success' => 1]);
+        } catch (\Exception $e)
+        {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        }
+    }
 }
