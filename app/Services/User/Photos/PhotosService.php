@@ -6,6 +6,7 @@ use App\Models\Users\Photos\Photos;
 use App\Repositories\User\Photos\AlbumPhotosRepository;
 use App\Repositories\User\Photos\PhotosRepository;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
 class PhotosService
@@ -25,7 +26,10 @@ class PhotosService
      * @param AlbumPhotosRepository $albumPhotosRepository
      * @param PhotosRepository $photosRepository
      */
-    public function __construct(AlbumPhotosRepository $albumPhotosRepository, PhotosRepository $photosRepository)
+    public function __construct(
+        AlbumPhotosRepository $albumPhotosRepository,
+        PhotosRepository $photosRepository
+    )
     {
         $this->albumPhotosRepository = $albumPhotosRepository;
         $this->photosRepository = $photosRepository;
@@ -71,6 +75,9 @@ class PhotosService
         $item = $this->photosRepository->find($id);
         if (empty($item))
             throw new \Exception(sprintf('Photo not found'));
+        if (File::exists(PhotosService::PATH_PHOTOS.$item->src)) {
+            File::delete(PhotosService::PATH_PHOTOS.$item->src);
+        }
         return $item->delete();
     }
 

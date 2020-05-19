@@ -26,7 +26,7 @@ class GroupRequest extends FormRequest
         return [
             'name' => 'required|min:3|string',
             'description' => 'nullable|max:1000',
-            'bg_image' => 'nullable|string',
+            'bg_image' => 'nullable|file',
             'type' => 'required|string',
             'is_accept_post' => 'required|boolean'
         ];

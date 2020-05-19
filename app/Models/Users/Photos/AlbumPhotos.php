@@ -4,6 +4,7 @@ namespace App\Models\Users\Photos;
 
 use App\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class AlbumPhotos extends Model
 {
@@ -22,6 +23,7 @@ class AlbumPhotos extends Model
 
     public function photos()
     {
-        return $this->hasMany(Photos::class, 'album_id');
+        return $this->hasMany(Photos::class, 'album_id')
+            ->where('user_id', Auth::id());
     }
 }

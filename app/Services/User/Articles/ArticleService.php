@@ -7,6 +7,7 @@ use App\Models\Articles\Article;
 use App\Models\Articles\ImagesArticle;
 use App\Repositories\User\Articles\ArticleRepository;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
 class ArticleService
@@ -101,6 +102,9 @@ class ArticleService
         $item = $this->articleRepository->findImage($id);
         if (empty($item))
             throw new \Exception(sprintf('Image not found'));
+        if (File::exists(ArticleService::IMAGES_ARTICLE_PATH.$item->src)) {
+            File::delete(ArticleService::IMAGES_ARTICLE_PATH.$item->src);
+        }
         return $item->delete();
     }
 
