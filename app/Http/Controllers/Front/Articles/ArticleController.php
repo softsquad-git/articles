@@ -40,7 +40,8 @@ class ArticleController extends Controller
         $search = [
             'title' => $request->input('title'),
             'category' => $request->input('category'),
-            'location' => $request->input('location')
+            'location' => $request->input('location'),
+            'ordering' => $request->input('ordering')
         ];
         return ArticleResource::collection($this->articleRepository->getArticles($search));
     }

@@ -14,7 +14,7 @@ class ArticleRepository
         $category = $search['category'];
         $location = $search['location'];
         $items = Article::where('status', Status::ARTICLE_PUBLISHED)
-            ->orderBy('id', 'DESC');
+            ->orderBy('id', $search['ordering'] ?? 'DESC');
         if (!empty($title))
             $items->where('title', 'like', '%' . $title . '%');
         if (!empty($category))

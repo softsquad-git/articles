@@ -42,7 +42,9 @@ class ArticleController extends Controller
     public function items(Request $request)
     {
         $search = [
-            'status' => $request->get('status')
+            'status' => $request->get('status'),
+            'category' => $request->input('category'),
+            'ordering' => $request->input('ordering')
         ];
         return ArticleResource::collection($this->articleRepository->items($search));
     }

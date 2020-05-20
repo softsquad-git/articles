@@ -12,12 +12,15 @@ class ArticleRepository
     public function items(array $search)
     {
         $status = $search['status'];
+        $category = $search['category'];
 
-        $items = Article::orderBy('id', 'DESC')
+        $items = Article::orderBy('id', $search['ordering'] ?? 'DESC')
             ->where('user_id', Auth::id());
 
         if (!empty($status))
             $items->where('status', $status);
+        if (!empty($category))
+            $items->where('category_id', $category);
 
         return $items
             ->paginate(10);
