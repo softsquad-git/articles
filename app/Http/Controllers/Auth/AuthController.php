@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Helpers\Logs;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\ActivateRequest;
 use App\Http\Requests\Auth\LoginRequest;
@@ -52,6 +53,7 @@ class AuthController extends Controller
         if (!$token = Auth::attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized', 'status' => 401], 401);
         }
+        Logs::saveAuthLog(Logs::LOGIN);
         return $this->respondWithToken($token);
     }
 
@@ -71,6 +73,7 @@ class AuthController extends Controller
     {
         try {
             Auth::guard('api')->logout();
+            Logs::saveAuthLog(Logs::LOGOUT);
             return response()->json([
                 'success' => 1,
                 'msg' => 'Logout'

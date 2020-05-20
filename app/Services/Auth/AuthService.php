@@ -2,6 +2,7 @@
 
 namespace App\Services\Auth;
 
+use App\Helpers\Logs;
 use App\Helpers\UpdateStatusUser;
 use App\Helpers\VerifyEmail;
 use App\Models\Users\SpecificData;
@@ -36,6 +37,7 @@ class AuthService
         SpecificData::create($dataSpecificUser);
 
         VerifyEmail::verify($user->id);
+        Logs::saveAuthLog(Logs::REGISTER);
 
         return $user;
     }

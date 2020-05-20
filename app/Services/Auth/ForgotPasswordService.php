@@ -2,6 +2,7 @@
 
 namespace App\Services\Auth;
 
+use App\Helpers\Logs;
 use App\Helpers\VerifyEmail;
 use App\Mail\User\ForgotPasswordMail;
 use App\Models\Users\ForgotPassword;
@@ -55,6 +56,7 @@ class ForgotPasswordService
         $user = User::where('email', $key->email)->first();
         $user->update($data);
         $key->delete();
+        Logs::saveAuthLog(Logs::REMIND_PASSWORD);
         return $user;
     }
 }

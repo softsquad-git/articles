@@ -3,6 +3,7 @@
 namespace App\Services\User\Settings;
 
 use App\Helpers\Avatar;
+use App\Helpers\Logs;
 use App\Helpers\UpdateStatusUser;
 use App\Helpers\VerifyEmail;
 use App\Mail\User\SuccessUpdateEmailMail;
@@ -78,6 +79,7 @@ class SettingService
         $item = $this->settingRepository->findUser();
         if (empty($item))
             throw new \Exception(sprintf('User not found'));
+        Logs::saveAuthLog(Logs::CHANGE_EMAIL);
         $item->update(['email' => $tmp_item->tmp_email]);
         UpdateStatusUser::setActivateUser(0);
         $tmp_item->delete();
@@ -136,6 +138,7 @@ class SettingService
             $user->update([
                 'password' => Hash::make($data['new_password'])
             ]);
+            Logs::saveAuthLog(Logs::CHANGE_PASSWORD);
             return $user;
         }
         throw new \Exception('Podałeś nieprawidłowe hasło');
