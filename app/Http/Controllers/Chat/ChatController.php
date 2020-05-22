@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Chat;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Chat\ChatMessageRequest;
-use App\Http\Resources\Chat\ChatMessageResource;
+use App\Http\Requests\Chat\ChatRequest;
+use App\Http\Resources\Chat\ChatResource;
 use App\Repositories\Chat\ChatRepository;
 use App\Services\Chat\ChatService;
 use Illuminate\Http\Request;
 use \Exception;
+use \Illuminate\Http\JsonResponse;
+use \Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ChatController extends Controller
 {
@@ -22,33 +24,72 @@ class ChatController extends Controller
      */
     private $chatRepository;
 
+    /**
+     * ChatController constructor.
+     * @param ChatService $chatService
+     * @param ChatRepository $chatRepository
+     */
     public function __construct(ChatService $chatService, ChatRepository $chatRepository)
     {
         $this->chatRepository = $chatRepository;
         $this->chatService = $chatService;
     }
 
-    public function getMessages()
+    /**
+     * @param Request $request
+     * @return JsonResponse|AnonymousResourceCollection
+     */
+    public function getConversations(Request $request)
     {
+        $params = [];
         try {
-            return ChatMessageResource::collection($this->chatRepository->getMessages());
+            return ChatResource::collection($this->chatRepository->getConversations($params));
         } catch (Exception $e) {
             return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
         }
     }
 
-    public function sendMessage(ChatMessageRequest $request)
+    /**
+     * @param ChatRequest $request
+     * @return JsonResponse
+     */
+    public function store(ChatRequest $request)
     {
         try {
-            $this->chatService->sendMessage($request->all());
-            return response()->json([
-                'success' => 1
-            ]);
+            $this->chatService->store($request->all());
+            return response()->json(['success' => 1]);
         } catch (Exception $e) {
-            return response()->json([
-                'success' => 0,
-                'msg' => $e->getMessage()
-            ]);
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        }
+    }
+
+    /**
+     * @param ChatRequest $request
+     * @param int $chatId
+     * @return JsonResponse
+     */
+    public function update(ChatRequest $request, int $chatId)
+    {
+        try {
+            $data = $request->only(['name', 'status']);
+            $this->chatService->update($data, $chatId);
+            return response()->json(['success' => 1]);
+        } catch (Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        }
+    }
+
+    /**
+     * @param int $chatId
+     * @return JsonResponse
+     */
+    public function remove(int $chatId)
+    {
+        try {
+            $this->chatService->remove($chatId);
+            return response()->json(['success' => 1]);
+        } catch (Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
         }
     }
 }

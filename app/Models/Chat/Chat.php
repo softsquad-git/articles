@@ -25,4 +25,9 @@ class Chat extends Model
     {
         return $this->belongsTo(User::class, 'recipient_id', 'id');
     }
+
+    public function messages()
+    {
+        return $this->hasMany(ChatMessage::class, 'chat_id');
+    }
 }

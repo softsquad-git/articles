@@ -8,8 +8,16 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth:api'], function () {
     Route::post('', 'LoggedController@user');
     Route::group(['middleware' => 'activated'], function () {
         Route::group(['prefix' => 'chat'], function () {
-            Route::post('messages', 'Chat\ChatController@getMessages');
-            Route::post('send-message', 'Chat\ChatController@sendMessage');
+            Route::post('', 'Chat\ChatController@getConversation');
+            Route::post('store', 'Chat\ChatController@store');
+            Route::post('update/{id}', 'Chat\ChatController@update');
+            Route::post('remove/{id}', 'Chat\ChatController@remove');
+            Route::gruop(['prefix' => 'messages'], function () {
+                Route::post('get/{id}', 'Chat\ChatMessageController@getMessages');
+                Route::post('store', 'Chat\ChatMessageController@store');
+                Route::post('update/{id}', 'Chat\ChatMessageController@update');
+                Route::post('remove/{id}', 'Chat\ChatMessageController@remove');
+            });
         });
         Route::group(['prefix' => 'articles'], function () {
             Route::post('', 'User\Articles\ArticleController@items');
@@ -65,11 +73,11 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth:api'], function () {
             Route::post('preview/{id}', 'User\Groups\GroupController@preview');
             Route::post('images/{id}', 'User\Groups\GroupController@getAllImages');
             Route::group(['prefix' => 'users'], function () {
-               Route::post('get/{id}', 'User\Groups\UsersGroupController@getUsersGroup');
-               Route::post('store', 'User\Groups\UsersGroupController@store');
-               Route::post('update/{id}', 'User\Groups\UsersGroupController@update');
-               Route::post('remove/{id}', 'User\Groups\UsersGroupController@remove');
-               Route::post('join/{groupId}', 'User\Groups\UsersGroupController@joinUserGroup');
+                Route::post('get/{id}', 'User\Groups\UsersGroupController@getUsersGroup');
+                Route::post('store', 'User\Groups\UsersGroupController@store');
+                Route::post('update/{id}', 'User\Groups\UsersGroupController@update');
+                Route::post('remove/{id}', 'User\Groups\UsersGroupController@remove');
+                Route::post('join/{groupId}', 'User\Groups\UsersGroupController@joinUserGroup');
             });
             Route::group(['prefix' => 'posts'], function () {
                 Route::post('accept/{post_id}', 'User\Groups\PostsGroupController@acceptPost');
