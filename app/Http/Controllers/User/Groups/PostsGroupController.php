@@ -123,4 +123,24 @@ class PostsGroupController extends Controller
             return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
         }
     }
+
+    public function getPostsForAdmin(int $groupId, int $status)
+    {
+        try {
+            $items = $this->groupsPostsRepository->getPostsForAdmin($groupId, $status);
+            return PostsGroupResource::collection($items);
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        }
+    }
+
+    public function acceptPost(int $postId)
+    {
+        try {
+            $this->groupsPostsService->acceptPost($postId);
+            return response()->json(['success' => 1]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        }
+    }
 }

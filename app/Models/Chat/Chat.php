@@ -7,14 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Chat extends Model
 {
-    protected $table = 'chat_messages';
+    protected $table = 'chat';
 
     protected $fillable = [
         'sender_id',
         'recipient_id',
-        'message',
-        'status',
-        'displayed'
+        'name',
+        'status'
     ];
 
     public function sender()

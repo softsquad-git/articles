@@ -46,7 +46,8 @@ class UsersGroupController extends Controller
                 'ordering' => $request->input('ordering'),
                 'group_id' => $id,
                 'is_author' => $request->input('is_author'),
-                'is_admin' => $request->input('is_admin')
+                'is_admin' => $request->input('is_admin'),
+                'status' => $request->input('status')
             ];
             return UsersGroupResource::collection($this->groupsUsersRepository->getUsersGroup($params));
         } catch (\Exception $e) {
@@ -91,6 +92,16 @@ class UsersGroupController extends Controller
     {
         try {
             $this->groupsUsersService->remove($id);
+            return response()->json(['success' => 1]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        }
+    }
+
+    public function joinUserGroup(int $groupId)
+    {
+        try {
+            $this->groupsUsersService->joinUserGroup($groupId);
             return response()->json(['success' => 1]);
         } catch (\Exception $e) {
             return response()->json(['success' => 0, 'msg' => $e->getMessage()]);

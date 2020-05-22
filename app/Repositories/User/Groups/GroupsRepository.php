@@ -28,7 +28,10 @@ class GroupsRepository
     public function getGroups(array $params)
     {
         return Group::whereHas('users', function ($q) {
-            $q->where('user_id', Auth::id());
+            $q->where([
+                'user_id' => Auth::id(),
+                'status' => GroupStatus::USER_STATUS_ACTIVE
+            ]);
         })
             ->where('status', GroupStatus::STATUS_ACTIVE)
             ->orderBy('id', $params['ordering'] ?? 'DESC')

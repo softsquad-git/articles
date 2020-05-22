@@ -5,6 +5,7 @@ namespace App\Services\User\Groups;
 use App\Helpers\GroupStatus;
 use App\Models\Users\Groups\PostsGroup;
 use App\Models\Users\Groups\PostsGroupImages;
+use App\Models\Users\Groups\UsersGroup;
 use App\Repositories\User\Groups\GroupsPostsRepository;
 use App\Repositories\User\Groups\GroupsRepository;
 use Illuminate\Support\Facades\Auth;
@@ -126,6 +127,23 @@ class GroupsPostsService
         if (empty($item))
             throw new \Exception(sprintf('Image %d not found', $id));
         return $item->delete();
+    }
+
+    /**
+     * @param int $postId
+     * @return bool|null
+     * @throws \Exception
+     */
+    public function acceptPost(int $postId): ?bool
+    {
+        $post = $this->groupsPostsRepository->findGroupPost($postId);
+        $user = UsersGroup::where([
+            'user_id' => Auth::id(),
+            'group_id' => $post->group_id
+        ])->first();
+        if($user->is_admin != 1)
+            throw new \Exception('Nie masz prawa dostępu');
+        return $post->update(['status' => 1]);
     }
 
 }

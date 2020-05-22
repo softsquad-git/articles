@@ -69,8 +69,11 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth:api'], function () {
                Route::post('store', 'User\Groups\UsersGroupController@store');
                Route::post('update/{id}', 'User\Groups\UsersGroupController@update');
                Route::post('remove/{id}', 'User\Groups\UsersGroupController@remove');
+               Route::post('join/{groupId}', 'User\Groups\UsersGroupController@joinUserGroup');
             });
             Route::group(['prefix' => 'posts'], function () {
+                Route::post('accept/{post_id}', 'User\Groups\PostsGroupController@acceptPost');
+                Route::post('admin/{group_id}/{status}', 'User\Groups\PostsGroupController@getPostsForAdmin');
                 Route::post('get/{id}', 'User\Groups\PostsGroupController@getPostsGroup');
                 Route::post('store', 'User\Groups\PostsGroupController@store');
                 Route::post('update/{id}', 'User\Groups\PostsGroupController@update');

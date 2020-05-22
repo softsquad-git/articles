@@ -23,12 +23,13 @@ class GroupsUsersRepository
     public function getUsersGroup(array $params)
     {
         $items = UsersGroup::orderBy('id', $params['ordering'] ?? 'DESC')
-            ->where('group_id', $params['group_id'])
-            ->where('status', GroupStatus::USER_STATUS_ACTIVE);
+            ->where('group_id', $params['group_id']);
         if (!empty($params['is_author']))
             $items->where('is_author', 1);
         if (!empty($params['is_admin']))
             $items->where('is_admin', 1);
+        if (!empty($params['status']))
+            $items->where('status', $params['status']);
 
         return $items
             ->paginate(20);

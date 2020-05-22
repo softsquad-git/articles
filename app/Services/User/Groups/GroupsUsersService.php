@@ -2,10 +2,12 @@
 
 namespace App\Services\User\Groups;
 
+use App\Helpers\GroupStatus;
 use App\Models\Users\Groups\UsersGroup;
 use App\Repositories\User\Groups\GroupsRepository;
 use App\Repositories\User\Groups\GroupsUsersRepository;
 use App\Repositories\User\UserRepository;
+use Illuminate\Support\Facades\Auth;
 
 class GroupsUsersService
 {
@@ -87,5 +89,32 @@ class GroupsUsersService
         if (empty($userGroup))
             throw new \Exception(sprintf('User %d not found in this group', $id));
         return $userGroup->delete();
+    }
+
+    /**
+     * @param int $groupId
+     * @return mixed
+     * @throws \Exception
+     */
+    public function joinUserGroup(int $groupId)
+    {
+        $group = $this->groupsRepository->findGroup($groupId);
+        if (empty($group))
+            throw new \Exception('Group not found');
+        if ($group->type === GroupStatus::TYPE_PRIVATE)
+            $status = 0;
+        else
+            $status = 1;
+        $data = [
+            'user_id' => Auth::id(),
+            'group_id' => $groupId,
+            'status' => $status,
+            'is_author' => 0,
+            'is_admin' => 0
+        ];
+        $userGroup = UsersGroup::create($data);
+        if (empty($userGroup))
+            throw new \Exception('Nie udało się dołączyć do grupy');
+        return $userGroup;
     }
 }
