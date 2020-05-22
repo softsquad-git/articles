@@ -12,7 +12,7 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth:api'], function () {
             Route::post('store', 'Chat\ChatController@store');
             Route::post('update/{id}', 'Chat\ChatController@update');
             Route::post('remove/{id}', 'Chat\ChatController@remove');
-            Route::gruop(['prefix' => 'messages'], function () {
+            Route::group(['prefix' => 'messages'], function () {
                 Route::post('get/{id}', 'Chat\ChatMessageController@getMessages');
                 Route::post('store', 'Chat\ChatMessageController@store');
                 Route::post('update/{id}', 'Chat\ChatMessageController@update');
