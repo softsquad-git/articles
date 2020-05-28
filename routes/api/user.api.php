@@ -8,12 +8,13 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth:api'], function () {
     Route::post('', 'LoggedController@user');
     Route::group(['middleware' => 'activated'], function () {
         Route::group(['prefix' => 'chat'], function () {
-            Route::post('', 'Chat\ChatController@getConversation');
+            Route::post('', 'Chat\ChatController@getConversations');
             Route::post('store', 'Chat\ChatController@store');
             Route::post('update/{id}', 'Chat\ChatController@update');
             Route::post('remove/{id}', 'Chat\ChatController@remove');
+            Route::post('find/{id}', 'Chat\ChatController@find');
             Route::group(['prefix' => 'messages'], function () {
-                Route::post('get/{id}', 'Chat\ChatMessageController@getMessages');
+                Route::post('get', 'Chat\ChatMessageController@getMessages');
                 Route::post('store', 'Chat\ChatMessageController@store');
                 Route::post('update/{id}', 'Chat\ChatMessageController@update');
                 Route::post('remove/{id}', 'Chat\ChatMessageController@remove');
@@ -92,4 +93,8 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth:api'], function () {
             });
         });
     });
+});
+Route::get('/t', function (){
+    event(new \App\Events\Chat\SendChatMessageEvent());
+    dd('Success');
 });

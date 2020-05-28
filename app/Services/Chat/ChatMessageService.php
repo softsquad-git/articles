@@ -1,9 +1,8 @@
 <?php
 
-
 namespace App\Services\Chat;
 
-
+use App\Events\Chat\SendChatMessageEvent;
 use App\Models\Chat\ChatMessage;
 use App\Repositories\Chat\ChatMessagesRepository;
 use App\Repositories\Chat\ChatRepository;
@@ -39,11 +38,12 @@ class ChatMessageService
         $senderId = $data['sender_id'] = Auth::id();
         if (empty($chat))
             throw new \Exception('Chat not found');
-        if ($chat->sender_id != $senderId || $chat->recipient_id != $senderId)
-            throw new \Exception('Refresh page and try again');
+//        if ($chat->sender_id != $senderId || $chat->recipient_id != $senderId)
+//            throw new \Exception('Refresh page and try again');
         $message = ChatMessage::create($data);
         if (empty($message))
             throw new \Exception('Nie udało się utworzyć wiadomości');
+        event(new SendChatMessageEvent($message));
         return $message;
     }
 

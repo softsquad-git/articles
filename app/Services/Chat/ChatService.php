@@ -33,15 +33,19 @@ class ChatService
      */
     public function store(array $data)
     {
-        $senderId = $data['sender_id'];
+        $senderId = $data['sender_id'] = Auth::id();
         $recipientId = $data['recipient_id'];
-        $sender = $this->userRepository->findUser($senderId);
         $recipient = $this->userRepository->findUser($recipientId);
-        if (empty($sender) || empty($recipient))
+        if (empty($recipient))
             throw new \Exception('Refresh page and try again');
         $chat = $this->chatRepository->checkChat($senderId, $recipientId);
-        if (!empty($chat))
-            throw new \Exception('Konwersacja już istnieje');
+        if (!empty($chat)) {
+            return [
+                'status' => 222,
+                'msg' => 'Konwersacja już istnieje',
+                'id' => $chat->id
+            ];
+        }
         $nChat = Chat::create($data);
         if (empty($nChat))
             throw new \Exception('Nie udało się utworzyć konwersacji');

@@ -56,8 +56,9 @@ class ChatController extends Controller
     public function store(ChatRequest $request)
     {
         try {
-            $this->chatService->store($request->all());
-            return response()->json(['success' => 1]);
+            $chat = $this->chatService->store($request->all());
+            if (!empty($chat))
+                return response()->json(['success' => 1, 'id' => $chat['id']]);
         } catch (Exception $e) {
             return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
         }
@@ -89,6 +90,15 @@ class ChatController extends Controller
             $this->chatService->remove($chatId);
             return response()->json(['success' => 1]);
         } catch (Exception $e) {
+            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        }
+    }
+
+    public function find(int $chatId)
+    {
+        try {
+            return new ChatResource($this->chatRepository->findChat($chatId));
+        } catch (\Exception $e) {
             return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
         }
     }
