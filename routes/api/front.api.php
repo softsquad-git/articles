@@ -2,7 +2,7 @@
 
 Route::post('articles', 'Front\Articles\ArticleController@items');
 Route::post('article/{id}', 'Front\Articles\ArticleController@item');
-Route::post('get-images-article/{id}', 'User\Articles\ArticleController@getImages');
+Route::post('get-images-article/{id}', 'Users\Articles\ArticleController@getImages');
 Route::group(['prefix' => 'comments'], function () {
     Route::post('', 'Comments\CommentController@items');     #list comments
     Route::group(['prefix' => 'answers'], function () {

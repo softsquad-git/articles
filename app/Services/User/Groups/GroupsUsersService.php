@@ -53,7 +53,7 @@ class GroupsUsersService
         $data['is_author'] = 0;
         $user = $this->userRepository->findUser($data['user_id']);
         if (empty($user))
-            throw new \Exception(sprintf('User %d not found', $data['user_id']));
+            throw new \Exception(sprintf('Users %d not found', $data['user_id']));
         $group = $this->groupsRepository->findGroup($data['group_id']);
         if (empty($group))
             throw new \Exception(sprintf('Group %d not found', $data['group_id']));
@@ -73,7 +73,7 @@ class GroupsUsersService
     {
         $userGroup = $this->groupsUsersRepository->findUserGroup($id);
         if (empty($userGroup))
-            throw new \Exception(sprintf('User %d not found in this group', $id));
+            throw new \Exception(sprintf('Users %d not found in this group', $id));
         $userGroup->update($data);
         return $userGroup;
     }
@@ -87,7 +87,7 @@ class GroupsUsersService
     {
         $userGroup = $this->groupsUsersRepository->findUserGroup($id);
         if (empty($userGroup))
-            throw new \Exception(sprintf('User %d not found in this group', $id));
+            throw new \Exception(sprintf('Users %d not found in this group', $id));
         return $userGroup->delete();
     }
 

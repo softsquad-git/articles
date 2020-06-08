@@ -19,7 +19,7 @@ class FriendRepository
     public function getFriends(int $user_id, $name = '')
     {
         if (empty(User::find($user_id)))
-            throw new \Exception(sprintf('User not found'));
+            throw new \Exception(sprintf('Users not found'));
 
         return Friend::where(function ($q) use ($user_id) {
             $q->where(['sender_id' => $user_id]);

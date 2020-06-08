@@ -1,7 +1,7 @@
 <?php
 Route::post('refresh-token', 'Auth\AuthController@refreshToken');
 Route::group(['prefix' => 'user', 'middleware' => 'auth:api'], function () {
-    Route::post('remove-account', 'User\Settings\SettingController@removeAccount');
+    Route::post('remove-account', 'Users\Settings\SettingController@removeAccount');
     Route::post('activate', 'Auth\AuthController@activate');
     Route::post('activate-key-refresh', 'Auth\AuthController@refreshKeyActivate');
     Route::post('logout', 'Auth\AuthController@logout');
@@ -21,37 +21,37 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth:api'], function () {
             });
         });
         Route::group(['prefix' => 'articles'], function () {
-            Route::post('', 'User\Articles\ArticleController@items');
-            Route::post('item/{id}', 'User\Articles\ArticleController@item');
-            Route::post('store', 'User\Articles\ArticleController@store');
-            Route::post('update/{id}', 'User\Articles\ArticleController@update');
-            Route::post('remove/{id}', 'User\Articles\ArticleController@remove');
-            Route::post('get-images/{id}', 'User\Articles\ArticleController@getImages');
-            Route::post('upload-images/{id}', 'User\Articles\ArticleController@uploadImages');
-            Route::post('remove-image/{id}', 'User\Articles\ArticleController@removeImage');
-            Route::post('archive/{id}', 'User\Articles\ArticleController@archive');
+            Route::post('', 'Users\Articles\ArticleController@items');
+            Route::post('item/{id}', 'Users\Articles\ArticleController@item');
+            Route::post('store', 'Users\Articles\ArticleController@store');
+            Route::post('update/{id}', 'Users\Articles\ArticleController@update');
+            Route::post('remove/{id}', 'Users\Articles\ArticleController@remove');
+            Route::post('get-images/{id}', 'Users\Articles\ArticleController@getImages');
+            Route::post('upload-images/{id}', 'Users\Articles\ArticleController@uploadImages');
+            Route::post('remove-image/{id}', 'Users\Articles\ArticleController@removeImage');
+            Route::post('archive/{id}', 'Users\Articles\ArticleController@archive');
             Route::post('categories', 'Categories\CategoryController@all');
-            Route::post('upload-file-editor', 'User\Articles\ArticleController@uploadFileEditor');
+            Route::post('upload-file-editor', 'Users\Articles\ArticleController@uploadFileEditor');
         });
         Route::group(['prefix' => 'settings'], function () {
-            Route::post('basic-data', 'User\Settings\SettingController@updateBasicData');
-            Route::post('try-update-email', 'User\Settings\SettingController@tryUpdateEmailUser');
-            Route::post('update-email', 'User\Settings\SettingController@updateEmailUser');
-            Route::post('check-tmp-email', 'User\Settings\SettingController@checkTmpEmail');
-            Route::post('avatar', 'User\Settings\SettingController@updateAvatar');
-            Route::post('set-template-mode/{type}', 'User\Settings\SettingController@setTemplateMode');
-            Route::post('update-password', 'User\Settings\SettingController@updatePassword');
+            Route::post('basic-data', 'Users\Settings\SettingController@updateBasicData');
+            Route::post('try-update-email', 'Users\Settings\SettingController@tryUpdateEmailUser');
+            Route::post('update-email', 'Users\Settings\SettingController@updateEmailUser');
+            Route::post('check-tmp-email', 'Users\Settings\SettingController@checkTmpEmail');
+            Route::post('avatar', 'Users\Settings\SettingController@updateAvatar');
+            Route::post('set-template-mode/{type}', 'Users\Settings\SettingController@setTemplateMode');
+            Route::post('update-password', 'Users\Settings\SettingController@updatePassword');
         });
         Route::group(['prefix' => 'album-photos'], function () {
-            Route::post('', 'User\Photos\AlbumPhotosController@items');
-            Route::post('store', 'User\Photos\AlbumPhotosController@store');
-            Route::post('update/{id}', 'User\Photos\AlbumPhotosController@update');
-            Route::post('remove/{id}', 'User\Photos\AlbumPhotosController@remove');
+            Route::post('', 'Users\Photos\AlbumPhotosController@items');
+            Route::post('store', 'Users\Photos\AlbumPhotosController@store');
+            Route::post('update/{id}', 'Users\Photos\AlbumPhotosController@update');
+            Route::post('remove/{id}', 'Users\Photos\AlbumPhotosController@remove');
         });
         Route::group(['prefix' => 'photos'], function () {
-            Route::post('get/{album_id}', 'User\Photos\PhotoController@items');
-            Route::post('store', 'User\Photos\PhotoController@store');
-            Route::post('remove/{id}', 'User\Photos\PhotoController@remove');
+            Route::post('get/{album_id}', 'Users\Photos\PhotoController@items');
+            Route::post('store', 'Users\Photos\PhotoController@store');
+            Route::post('remove/{id}', 'Users\Photos\PhotoController@remove');
         });
         Route::group(['prefix' => 'follows'], function () {
             Route::post('get/{resource_type}', 'Follows\FollowController@getFollows');
@@ -59,37 +59,37 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth:api'], function () {
             Route::post('remove/{id}', 'Follows\FollowController@unFollow');
         });
         Route::group(['prefix' => 'friends'], function () {
-            Route::post('', 'User\Friends\FriendController@friends');
-            Route::post('add', 'User\Friends\FriendController@store');
-            Route::post('sent', 'User\Friends\FriendController@sentInvitations');
-            Route::post('waiting', 'User\Friends\FriendController@waitingInvitations');
-            Route::post('remove/{id}', 'User\Friends\FriendController@remove');
-            Route::post('accept/{id}', 'User\Friends\FriendController@acceptInvitation');
+            Route::post('', 'Users\Friends\FriendController@friends');
+            Route::post('add', 'Users\Friends\FriendController@store');
+            Route::post('sent', 'Users\Friends\FriendController@sentInvitations');
+            Route::post('waiting', 'Users\Friends\FriendController@waitingInvitations');
+            Route::post('remove/{id}', 'Users\Friends\FriendController@remove');
+            Route::post('accept/{id}', 'Users\Friends\FriendController@acceptInvitation');
         });
         Route::group(['prefix' => 'groups'], function () {
-            Route::post('', 'User\Groups\GroupController@getGroups');
-            Route::post('store', 'User\Groups\GroupController@store');
-            Route::post('update/{id}', 'User\Groups\GroupController@update');
-            Route::post('remove/{id}', 'User\Groups\GroupController@remove');
-            Route::post('preview/{id}', 'User\Groups\GroupController@preview');
-            Route::post('images/{id}', 'User\Groups\GroupController@getAllImages');
+            Route::post('', 'Users\Groups\GroupController@getGroups');
+            Route::post('store', 'Users\Groups\GroupController@store');
+            Route::post('update/{id}', 'Users\Groups\GroupController@update');
+            Route::post('remove/{id}', 'Users\Groups\GroupController@remove');
+            Route::post('preview/{id}', 'Users\Groups\GroupController@preview');
+            Route::post('images/{id}', 'Users\Groups\GroupController@getAllImages');
             Route::group(['prefix' => 'users'], function () {
-                Route::post('get/{id}', 'User\Groups\UsersGroupController@getUsersGroup');
-                Route::post('store', 'User\Groups\UsersGroupController@store');
-                Route::post('update/{id}', 'User\Groups\UsersGroupController@update');
-                Route::post('remove/{id}', 'User\Groups\UsersGroupController@remove');
-                Route::post('join/{groupId}', 'User\Groups\UsersGroupController@joinUserGroup');
+                Route::post('get/{id}', 'Users\Groups\UsersGroupController@getUsersGroup');
+                Route::post('store', 'Users\Groups\UsersGroupController@store');
+                Route::post('update/{id}', 'Users\Groups\UsersGroupController@update');
+                Route::post('remove/{id}', 'Users\Groups\UsersGroupController@remove');
+                Route::post('join/{groupId}', 'Users\Groups\UsersGroupController@joinUserGroup');
             });
             Route::group(['prefix' => 'posts'], function () {
-                Route::post('accept/{post_id}', 'User\Groups\PostsGroupController@acceptPost');
-                Route::post('admin/{group_id}/{status}', 'User\Groups\PostsGroupController@getPostsForAdmin');
-                Route::post('get/{id}', 'User\Groups\PostsGroupController@getPostsGroup');
-                Route::post('store', 'User\Groups\PostsGroupController@store');
-                Route::post('update/{id}', 'User\Groups\PostsGroupController@update');
-                Route::post('remove/{id}', 'User\Groups\PostsGroupController@remove');
-                Route::post('images/{id}', 'User\Groups\PostsGroupController@getPostImages');
-                Route::post('images/remove/{id}', 'User\Groups\PostsGroupController@removeImagePost');
-                Route::post('images/upload/{id}', 'User\Groups\PostsGroupController@uploadImagesPost');
+                Route::post('accept/{post_id}', 'Users\Groups\PostsGroupController@acceptPost');
+                Route::post('admin/{group_id}/{status}', 'Users\Groups\PostsGroupController@getPostsForAdmin');
+                Route::post('get/{id}', 'Users\Groups\PostsGroupController@getPostsGroup');
+                Route::post('store', 'Users\Groups\PostsGroupController@store');
+                Route::post('update/{id}', 'Users\Groups\PostsGroupController@update');
+                Route::post('remove/{id}', 'Users\Groups\PostsGroupController@remove');
+                Route::post('images/{id}', 'Users\Groups\PostsGroupController@getPostImages');
+                Route::post('images/remove/{id}', 'Users\Groups\PostsGroupController@removeImagePost');
+                Route::post('images/upload/{id}', 'Users\Groups\PostsGroupController@uploadImagesPost');
             });
         });
     });

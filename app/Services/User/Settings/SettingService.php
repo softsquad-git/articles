@@ -78,7 +78,7 @@ class SettingService
             throw new \Exception(sprintf('Code provided is invalid'));
         $item = $this->settingRepository->findUser();
         if (empty($item))
-            throw new \Exception(sprintf('User not found'));
+            throw new \Exception(sprintf('Users not found'));
         Logs::saveAuthLog(Logs::CHANGE_EMAIL);
         $item->update(['email' => $tmp_item->tmp_email]);
         UpdateStatusUser::setActivateUser(0);

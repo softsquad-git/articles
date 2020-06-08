@@ -25,7 +25,7 @@ class ProfileRepository
     {
         $user = User::find($id);
         if (empty($user))
-            throw new \Exception(sprintf('User not found'));
+            throw new \Exception(sprintf('Users not found'));
         return $user;
     }
 
@@ -33,7 +33,7 @@ class ProfileRepository
     {
         $user_id = $params['user_id'];
         if (empty($user_id))
-            throw new \Exception(sprintf('User not found. Refresh page please'));
+            throw new \Exception(sprintf('Users not found. Refresh page please'));
         $title = $params['title'];
         $category_id = $params['category_id'];
         $items = Article::where('user_id', $user_id)
@@ -50,7 +50,7 @@ class ProfileRepository
     {
         $user = $this->findUser($id);
         if (empty($user))
-            throw new \Exception(sprintf('User not found'));
+            throw new \Exception(sprintf('Users not found'));
         return $user->albums;
     }
 

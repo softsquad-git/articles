@@ -24,7 +24,7 @@ class UserSeeder extends Seeder
             $s = \App\Models\Users\SpecificData::create([
                 'user_id' => $user->id,
                 'name' => 'Test ' .$i,
-                'last_name' => 'User ' . $i,
+                'last_name' => 'Users ' . $i,
                 'sex' => $sex[array_rand($sex)],
                 'birthday' => '2000-08-30',
                 'terms' => 1
