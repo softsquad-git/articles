@@ -20,6 +20,7 @@ class CreateUsersTable extends Migration
             $table->integer('activated')->default(0);
             $table->integer('locked')->default(0);
             $table->boolean('dark_mode')->default(0);
+            $table->integer('r_role')->default(\App\Helpers\Status::R_USER);
             $table->timestamps();
         });
     }

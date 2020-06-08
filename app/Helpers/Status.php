@@ -11,4 +11,6 @@ class Status
     const ARTICLE_LOCKED = 'LOCKED';
     const ARTICLE_AUTHOR = 'AUTHOR';
     const FEATURED = 'FEATURED';
+    const R_USER = 1;
+    const R_ADMIN = 2;
 }
