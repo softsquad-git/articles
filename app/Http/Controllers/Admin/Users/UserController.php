@@ -41,4 +41,45 @@ class UserController extends Controller
             return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
         }
     }
+
+    public function changeActivated(int $value, int $userId)
+    {
+        try {
+            $this->_A_UserService->changeActivated($value, $userId);
+            return response()->json([
+                'success' => 1
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => 0,
+                'msg' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function changeLocked(int $value, int $userId)
+    {
+        try {
+            $this->_A_UserService->changeLocked($value, $userId);
+            return response()->json([
+                'success' => 1
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => 0,
+                'msg' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function findUser(int $userId)
+    {
+        try {
+            return new UserResource($this->_A_UserRepository->findUser($userId));
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => 0
+            ]);
+        }
+    }
 }
