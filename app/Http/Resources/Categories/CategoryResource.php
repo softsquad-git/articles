@@ -27,6 +27,7 @@ class CategoryResource extends JsonResource
         ];
         $data = parent::toArray($request);
         $data['bg'] = $backgrounds[array_rand($backgrounds)];
+        $data['c_articles'] = $this->articles->count();
         return $data;
     }
 }

@@ -35,12 +35,12 @@ Route::group(['prefix' => 'profile-page'], function (){
     Route::post('photos', 'Front\Profile\ProfileController@photos');
     Route::post('friends/{user_id}', 'Front\Profile\ProfileController@friends');
 });
-Route::post('categories-all', 'Categories\CategoryController@all');
+Route::post('Categories-all', 'Categories\CategoryController@all');
 Route::post('peoples', 'Front\Friends\FriendController@usersList');
 
 Route::group(['prefix' => 'home'], function (){
     Route::post('latest-four-articles', 'Home\HomePageController@getLatestFourArticles');
-    Route::post('categories', 'Home\HomePageController@getCategories');
+    Route::post('Categories', 'Home\HomePageController@getCategories');
     Route::post('articles-from-category/{id}', 'Home\HomePageController@getArticleFromCategory');
     Route::post('articles-author-service', 'Home\HomePageController@getArticlesAuthorService');
     Route::post('articles-featured', 'Home\HomePageController@getFeaturedArticles');

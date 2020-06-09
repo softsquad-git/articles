@@ -5,7 +5,7 @@ include 'api/front.api.php';
 include 'api/user.api.php';
 include 'api/admin.api.php';
 
-Route::post('categories', 'Categories\CategoryController@items');
+Route::post('Categories', 'Categories\CategoryController@items');
 
 /**TODO
  *  - Usuwanie konta (weryfikacja)

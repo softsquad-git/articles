@@ -12,4 +12,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
        Route::post('change-status/{status}/{articleId}', 'Admin\Articles\ArticleController@changeStatus');
        Route::post('find/{articleId}', 'Admin\Articles\ArticleController@findArticle');
     });
+    Route::group(['prefix' => 'categories'], function () {
+        Route::post('get', 'Admin\Categories\CategoryController@getCategories');
+        Route::post('store', 'Admin\Categories\CategoryController@store');
+        Route::post('update/{categoryId}', 'Admin\Categories\CategoryController@update');
+        Route::post('remove/{categoryId}', 'Admin\Categories\CategoryController@remove');
+        Route::post('find/{categoryId}', 'Admin\Categories\CategoryController@findCategory');
+    });
 });

@@ -15,7 +15,7 @@ class CategoryController extends Controller
     private $categoryRepository;
 
     /**
-     * CategoryController constructor.
+     * CategoryService constructor.
      * @param CategoryRepository $categoryRepository
      */
     public function __construct(CategoryRepository $categoryRepository)

@@ -30,7 +30,7 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth:api'], function () {
             Route::post('upload-images/{id}', 'Users\Articles\ArticleController@uploadImages');
             Route::post('remove-image/{id}', 'Users\Articles\ArticleController@removeImage');
             Route::post('archive/{id}', 'Users\Articles\ArticleController@archive');
-            Route::post('categories', 'Categories\CategoryController@all');
+            Route::post('Categories', 'Categories\CategoryController@all');
             Route::post('upload-file-editor', 'Users\Articles\ArticleController@uploadFileEditor');
         });
         Route::group(['prefix' => 'settings'], function () {
