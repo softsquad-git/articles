@@ -39,10 +39,10 @@ Route::post('Categories-all', 'Categories\CategoryController@all');
 Route::post('peoples', 'Front\Friends\FriendController@usersList');
 
 Route::group(['prefix' => 'home'], function (){
-    Route::post('latest-four-articles', 'Home\HomePageController@getLatestFourArticles');
-    Route::post('Categories', 'Home\HomePageController@getCategories');
-    Route::post('articles-from-category/{id}', 'Home\HomePageController@getArticleFromCategory');
-    Route::post('articles-author-service', 'Home\HomePageController@getArticlesAuthorService');
-    Route::post('articles-featured', 'Home\HomePageController@getFeaturedArticles');
-    Route::post('latest-photos', 'Home\HomePageController@getLatestPhotos');
+    Route::post('latest-three-articles', 'Home\HomePageController@getLatestThreeArticles');
+    Route::post('latest-news', 'Home\HomePageController@getLatestNews');
+    Route::post('popular-news', 'Home\HomePageController@getPopularNews');
+    Route::post('categories', 'Home\HomePageController@getCategories');
+    Route::post('author-news', 'Home\HomePageController@getAuthorNews');
+    Route::post('selected-photos', 'Home\HomePageController@getSelectedPhotos');
 });

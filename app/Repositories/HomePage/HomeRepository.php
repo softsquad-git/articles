@@ -21,64 +21,44 @@ class HomeRepository
         $this->categoryRepository = $categoryRepository;
     }
 
-    public function getLatestFourArticles()
+    public function getLatestThreeArticles()
     {
         return Article::orderBy('id', 'DESC')
-            ->limit(4)
+            ->limit(3)
             ->get();
     }
 
-    public function getCategories()
+    public function getLatestNews()
     {
-        return Category::orderBy('id', 'DESC')
-            ->limit(5)
+        $articles = Article::orderBy('id', 'DESC')
+            ->limit(10)
+            ->get();
+        return $articles->random(4);
+    }
+
+    public function getPopularNews()
+    {
+        return Article::orderBy('views', 'DESC')
+            ->limit(3)
             ->get();
     }
 
-    /**
-     * @param int $id
-     * @return mixed
-     * @throws \Exception
-     */
-    public function getArticleFromCategory(int $id)
+    public function getCategories(){
+        return Category::where('status', 1)
+            ->get();
+    }
+
+    public function getAuthorNews()
     {
-        if ($id == 0) {
-            return Article::orderBy('id', 'DESC')
-                ->limit(13)
-                ->get();
-        }
-
-        $category = $this->categoryRepository->findCategory($id);
-        if (empty($category))
-            throw new \Exception(sprintf('Category not found'));
-
-        return $category->articles()
+        return Article::where('status', Status::ARTICLE_AUTHOR)
             ->orderBy('id', 'DESC')
-            ->limit(13)
-            ->get();
-
-    }
-
-    public function getArticlesAuthorService()
-    {
-        return Article::orderBy('id', 'DESC')
-            ->where('status', Status::ARTICLE_AUTHOR)
-            ->limit(20)
             ->get();
     }
 
-    public function getFeaturedArticles()
-    {
-        return Article::orderBy('id', 'DESC')
-            ->where('status', Status::FEATURED)
-            ->limit(5)
-            ->get();
-    }
-
-    public function getLatestPhotos()
+    public function getSelectedPhotos()
     {
         return Photos::orderBy('id', 'DESC')
-            ->limit(16)
+            ->limit(18)
             ->get();
     }
 

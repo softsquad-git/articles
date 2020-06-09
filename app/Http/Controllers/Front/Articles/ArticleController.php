@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Front\Articles;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Articles\ArticleResource;
+use App\Http\Resources\ArticlesListResource;
 use App\Repositories\Front\Articles\ArticleRepository;
 use App\Services\Front\Articles\ArticleService;
 use Illuminate\Http\Request;
+use \Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use \Illuminate\Http\JsonResponse;
 
 class ArticleController extends Controller
 {
@@ -33,7 +36,7 @@ class ArticleController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return AnonymousResourceCollection
      */
     public function items(Request $request)
     {
@@ -43,12 +46,12 @@ class ArticleController extends Controller
             'location' => $request->input('location'),
             'ordering' => $request->input('ordering')
         ];
-        return ArticleResource::collection($this->articleRepository->getArticles($search));
+        return ArticlesListResource::collection($this->articleRepository->getArticles($search));
     }
 
     /**
      * @param int $id
-     * @return ArticleResource|\Illuminate\Http\JsonResponse
+     * @return ArticleResource|JsonResponse
      */
     public function item(int $id)
     {

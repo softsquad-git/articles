@@ -3,6 +3,7 @@
 namespace App\Models\Articles;
 
 use App\Models\Categories\Category;
+use App\Models\Comments\Comment;
 use App\Models\Follows\Follow;
 use App\Models\Likes\Like;
 use App\Services\User\Articles\ArticleService;
@@ -50,6 +51,12 @@ class Article extends Model
     {
         return $this->hasMany(Follow::class, 'resource_id', 'id')
             ->where('resource_type', ArticleService::RESOURCE_TYPE);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'resource_id', 'id')
+            ->Where('resource_type', ArticleService::RESOURCE_TYPE);
     }
 
 }

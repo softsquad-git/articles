@@ -7,6 +7,8 @@ use App\Http\Resources\Articles\ArticleResource;
 use App\Http\Resources\Categories\CategoryResource;
 use App\Http\Resources\User\Photos\PhotosResource;
 use App\Repositories\HomePage\HomeRepository;
+use \Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use \Illuminate\Http\JsonResponse;
 
 class HomePageController extends Controller
 {
@@ -25,55 +27,70 @@ class HomePageController extends Controller
     }
 
     /**
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return AnonymousResourceCollection
      */
-    public function getLatestFourArticles()
+    public function getLatestThreeArticles()
     {
-        return ArticleResource::collection($this->homeRepository->getLatestFourArticles());
+        return ArticleResource::collection($this->homeRepository->getLatestThreeArticles());
     }
 
-    /**
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
-     */
-    public function getCategories()
-    {
-        return CategoryResource::collection($this->homeRepository->getCategories());
-    }
-
-    /**
-     * @param $id
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
-     */
-    public function getArticleFromCategory($id)
+    public function getLatestNews()
     {
         try {
-            return ArticleResource::collection($this->homeRepository->getArticleFromCategory($id));
+            return ArticleResource::collection($this->homeRepository->getLatestNews());
         } catch (\Exception $e) {
-            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+            return response()->json([
+                'success' => 0,
+                'msg' => $e->getMessage()
+            ]);
         }
     }
 
-    /**
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
-     */
-    public function getArticlesAuthorService()
+    public function getPopularNews()
     {
-        return ArticleResource::collection($this->homeRepository->getArticlesAuthorService());
+        try {
+            return ArticleResource::collection($this->homeRepository->getPopularNews());
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => 0,
+                'msg' => $e->getMessage()
+            ]);
+        }
     }
 
-    /**
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
-     */
-    public function getFeaturedArticles()
+    public function getCategories()
     {
-        return ArticleResource::collection($this->homeRepository->getFeaturedArticles());
+        try {
+            return CategoryResource::collection($this->homeRepository->getCategories());
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => 0,
+                'msg' => $e->getMessage()
+            ]);
+        }
     }
 
-    /**
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
-     */
-    public function getLatestPhotos()
+    public function getAuthorNews()
     {
-        return PhotosResource::collection($this->homeRepository->getLatestPhotos());
+        try {
+            return ArticleResource::collection($this->homeRepository->getAuthorNews());
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => 0,
+                'msg' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function getSelectedPhotos()
+    {
+        try {
+            return PhotosResource::collection($this->homeRepository->getSelectedPhotos());
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => 0,
+                'msg' => $e->getMessage()
+            ]);
+        }
     }
 }
