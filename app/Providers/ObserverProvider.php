@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Models\Articles\Article;
+use App\Models\Categories\Category;
 use App\Models\Comments\Comment;
 use App\Observer\Articles\ArticleObserver;
+use App\Observer\Categories\CategoryObserver;
 use App\Observer\Comments\CommentsObserve;
 use App\Observer\Users\UsersObserver;
 use App\User;
@@ -32,5 +34,6 @@ class ObserverProvider extends ServiceProvider
         Article::observe(ArticleObserver::class);
         Comment::observe(CommentsObserve::class);
         User::observe(UsersObserver::class);
+        Category::observe(CategoryObserver::class);
     }
 }
