@@ -11,6 +11,7 @@ class FriendRepository
     public function usersList(array $params)
     {
         $items = User::where('activated', 1)
+            ->orderBy('id', $params['ordering'] ?? 'DESC')
             ->where('locked', 0);
         if (!empty($params['name'])){
             $items->whereHas('specificData', function ($query) use ($params){
