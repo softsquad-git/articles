@@ -2,22 +2,22 @@
 
 namespace App\Http\Resources\Friends;
 
-use App\Http\Resources\Users\UserResource;
+use App\Helpers\Avatar;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class FriendResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return array
-     */
     public function toArray($request)
     {
+        $user = $this->recipient ?? $this->sender;
         $data['id'] = $this->id;
         $data['status'] = $this->status;
-        $data['friends'] = new UserResource($this->recipient ?? $this->sender);
+        $data['user'] = [
+            'id' => $user->id,
+            'name' => $user->specificData->name . ' ' . $user->specificData->last_name,
+            'avatar' => Avatar::src($user->id)
+        ];
+        $data['created_at'] = (string)$this->created_at;
         return $data;
 
     }
