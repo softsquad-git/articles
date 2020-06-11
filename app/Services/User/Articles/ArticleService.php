@@ -3,16 +3,16 @@
 namespace App\Services\User\Articles;
 
 use App\Helpers\Status;
+use App\Helpers\Upload;
 use App\Models\Articles\Article;
 use App\Models\Articles\ImagesArticle;
 use App\Repositories\User\Articles\ArticleRepository;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use \Exception;
 
 class ArticleService
 {
-
     const IMAGES_ARTICLE_PATH = 'assets/data/articles/images/';
     const IMAGES_ARTICLE_EDITOR_PATH = 'assets/data/articles/wysywig/';
     const RESOURCE_TYPE = 'ARTICLE';
@@ -30,14 +30,14 @@ class ArticleService
     /**
      * @param array $data
      * @return Article
-     * @throws \Exception
+     * @throws Exception
      */
     public function store(array $data): Article
     {
         $data['user_id'] = Auth::id();
         $item = Article::create($data);
         if (empty($item))
-            throw new \Exception(sprintf('Try again'));
+            throw new Exception(sprintf('Try again'));
         return $item;
     }
 
@@ -45,7 +45,7 @@ class ArticleService
      * @param array $data
      * @param int $id
      * @return Article
-     * @throws \Exception
+     * @throws Exception
      */
     public function update(array $data, int $id): Article
     {
@@ -57,7 +57,7 @@ class ArticleService
     /**
      * @param int $id
      * @return bool|null
-     * @throws \Exception
+     * @throws Exception
      */
     public function remove(int $id): ?bool
     {
@@ -66,58 +66,47 @@ class ArticleService
 
     /**
      * @param int $article_id
-     * @param array $images
-     * @return array
-     * @throws \Exception
+     * @param $image
+     * @return bool
+     * @throws Exception
      */
-    public function uploadImages(int $article_id, array $images)
+    public function uploadImage(int $article_id, $image)
     {
         $article = $this->articleRepository->find($article_id);
         if (empty($article))
-            throw new \Exception(sprintf('Article not found'));
-        $articles = [];
-        $b_path = ArticleService::IMAGES_ARTICLE_PATH;
-        foreach ($images as $image) {
-            $file_name = md5(time() . Str::random(32)) . '.' . $image->getClientOriginalExtension();
-            $image->move($b_path, $file_name);
-            $article = ImagesArticle::create([
+            throw new Exception(sprintf('Article not found'));
+        $images = ImagesArticle::where([
+            'article_id' => $article_id,
+            'user_id' => Auth::id()
+        ])->get();
+        if (count($images) > 0) {
+            foreach ($images as $image) {
+                $image->delete();
+            }
+        }
+        $fileName = Upload::singleFile(ArticleService::IMAGES_ARTICLE_PATH, $image);
+        try {
+            ImagesArticle::create([
                 'user_id' => Auth::id(),
                 'article_id' => $article_id,
-                'src' => $file_name
+                'src' => $fileName
             ]);
-
-            $articles[] = $article;
+        } catch (Exception $e) {
+            throw new Exception('Upload file error');
         }
-
-        return $articles;
-    }
-
-    /**
-     * @param int $id
-     * @return bool|null
-     * @throws \Exception
-     */
-    public function removeImage(int $id): ?bool
-    {
-        $item = $this->articleRepository->findImage($id);
-        if (empty($item))
-            throw new \Exception(sprintf('Image not found'));
-        if (File::exists(ArticleService::IMAGES_ARTICLE_PATH.$item->src)) {
-            File::delete(ArticleService::IMAGES_ARTICLE_PATH.$item->src);
-        }
-        return $item->delete();
+        return true;
     }
 
     /**
      * @param int $id
      * @return Article
-     * @throws \Exception
+     * @throws Exception
      */
     public function archive(int $id): Article
     {
         $item = $this->articleRepository->find($id);
         if (empty($item))
-            throw new \Exception(sprintf('Article not found'));
+            throw new Exception(sprintf('Article not found'));
         if ($item->status == Status::ARTICLE_ARCHIVE) {
             $item->update([
                 'status' => Status::ARTICLE_PUBLISHED
@@ -130,12 +119,16 @@ class ArticleService
         return $item;
     }
 
+    /**
+     * @param $file
+     * @return string
+     */
     public function uploadImageEditor($file)
     {
         $b_path = ArticleService::IMAGES_ARTICLE_EDITOR_PATH;
         $file_name = md5(time() . Str::random(32)) . '.' . $file->getClientOriginalExtension();
         $file->move($b_path, $file_name);
-        return asset($b_path.$file_name);
+        return asset($b_path . $file_name);
     }
 
 

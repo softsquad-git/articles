@@ -26,11 +26,7 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth:api'], function () {
             Route::post('store', 'Users\Articles\ArticleController@store');
             Route::post('update/{id}', 'Users\Articles\ArticleController@update');
             Route::post('remove/{id}', 'Users\Articles\ArticleController@remove');
-            Route::post('get-images/{id}', 'Users\Articles\ArticleController@getImages');
-            Route::post('upload-images/{id}', 'Users\Articles\ArticleController@uploadImages');
-            Route::post('remove-image/{id}', 'Users\Articles\ArticleController@removeImage');
             Route::post('archive/{id}', 'Users\Articles\ArticleController@archive');
-            Route::post('Categories', 'Categories\CategoryController@all');
             Route::post('upload-file-editor', 'Users\Articles\ArticleController@uploadFileEditor');
         });
         Route::group(['prefix' => 'settings'], function () {
