@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\User\Settings;
+namespace App\Http\Controllers\Users\Settings;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\Settings\SettingRequest;

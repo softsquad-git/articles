@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\User\Articles;
+namespace App\Http\Controllers\Users\Articles;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\Articles\ArticleRequest;
@@ -8,6 +8,7 @@ use App\Http\Requests\User\Articles\ArticleUploadFileEditorRequest;
 use App\Http\Requests\User\Articles\ArtilceImagesRequest;
 use App\Http\Resources\Articles\ArticleImagesResource;
 use App\Http\Resources\Articles\ArticleResource;
+use App\Http\Resources\ArticlesListResource;
 use App\Repositories\User\Articles\ArticleRepository;
 use App\Services\User\Articles\ArticleService;
 use Illuminate\Http\Request;
@@ -46,7 +47,7 @@ class ArticleController extends Controller
             'category' => $request->input('category'),
             'ordering' => $request->input('ordering')
         ];
-        return ArticleResource::collection($this->articleRepository->items($search));
+        return ArticlesListResource::collection($this->articleRepository->items($search));
     }
 
     /**

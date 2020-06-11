@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\User\Photos;
+namespace App\Http\Controllers\Users\Photos;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\Photos\AlbumPhotosRequest;

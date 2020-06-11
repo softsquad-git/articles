@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\User\Friends;
+namespace App\Http\Controllers\Users\Friends;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\Friends\FriendRequest;

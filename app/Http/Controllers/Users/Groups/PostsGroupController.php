@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\User\Groups;
+namespace App\Http\Controllers\Users\Groups;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\Groups\PostImagesRequest;
