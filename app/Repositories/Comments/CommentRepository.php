@@ -3,6 +3,7 @@
 namespace App\Repositories\Comments;
 
 use App\Models\Comments\Comment;
+use \Exception;
 
 class CommentRepository
 {
@@ -10,7 +11,7 @@ class CommentRepository
     /**
      * @param array $params
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function getComments(array $params)
     {
@@ -26,10 +27,14 @@ class CommentRepository
     /**
      * @param int $id
      * @return mixed
+     * @throws Exception
      */
     public function findComment(int $id)
     {
-        return Comment::find($id);
+        $comment = Comment::find($id);
+        if (empty($comment))
+            throw new Exception('Comment not found');
+        return $comment;
     }
 
 }

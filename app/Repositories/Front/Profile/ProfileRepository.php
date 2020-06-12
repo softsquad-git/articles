@@ -3,8 +3,7 @@
 namespace App\Repositories\Front\Profile;
 
 use App\Models\Articles\Article;
-use App\Models\Users\Photos\AlbumPhotos;
-use App\Models\Users\Photos\Photos;
+use \Exception;
 use App\Repositories\User\Photos\AlbumPhotosRepository;
 use App\Services\User\Photos\PhotosService;
 use App\User;
@@ -21,6 +20,11 @@ class ProfileRepository
         $this->albumPhotosRepository = $albumPhotosRepository;
     }
 
+    /**
+     * @param int $id
+     * @return mixed
+     * @throws Exception
+     */
     public function findUser(int $id)
     {
         $user = User::find($id);
@@ -29,14 +33,19 @@ class ProfileRepository
         return $user;
     }
 
+    /**
+     * @param array $params
+     * @return mixed
+     * @throws Exception
+     */
     public function articles(array $params)
     {
-        $user_id = $params['user_id'];
-        if (empty($user_id))
+        $userId = $params['user_id'];
+        if (empty($userId))
             throw new \Exception(sprintf('Users not found. Refresh page please'));
         $title = $params['title'];
         $category_id = $params['category_id'];
-        $items = Article::where('user_id', $user_id)
+        $items = Article::where('user_id', $userId)
             ->orderBy('id', 'DESC');
         if (!empty($title))
             $items->where('title', 'like', '%' . $title . '%');
@@ -46,24 +55,25 @@ class ProfileRepository
             ->paginate(20);
     }
 
+    /**
+     * @param int $id
+     * @return mixed
+     * @throws Exception
+     */
     public function albums(int $id)
     {
         $user = $this->findUser($id);
-        if (empty($user))
-            throw new \Exception(sprintf('Users not found'));
         return $user->albums;
     }
 
     /**
      * @param int $id
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function photos(int $id)
     {
         $album = $this->albumPhotosRepository->find($id);
-        if (empty($album))
-            throw new \Exception(sprintf('Album not found'));
         $allImages = $album->photos;
         $images = [];
         foreach ($allImages as $img) {

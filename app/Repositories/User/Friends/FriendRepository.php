@@ -7,6 +7,7 @@ use App\Models\Friends\Friend;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use \Exception;
 
 class FriendRepository
 {
@@ -14,7 +15,7 @@ class FriendRepository
      * @param int $user_id
      * @param string $name
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function getFriends(int $user_id, $name = '')
     {
@@ -50,6 +51,9 @@ class FriendRepository
             ->get();
     }
 
+    /**
+     * @return mixed
+     */
     public function sentInvitations()
     {
         return Friend::where(['sender_id' => Auth::id(), 'status' => FriendshipStatus::SENT])
@@ -63,6 +67,9 @@ class FriendRepository
             ])->get();
     }
 
+    /**
+     * @return mixed
+     */
     public function waitingInvitations()
     {
         return Friend::where(['recipient_id' => Auth::id(), 'status' => FriendshipStatus::SENT])
@@ -76,9 +83,17 @@ class FriendRepository
             ])->get();
     }
 
+    /**
+     * @param int $id
+     * @return mixed
+     * @throws Exception
+     */
     public function findPivot(int $id)
     {
-        return Friend::find($id);
+        $pivot = Friend::find($id);
+        if (empty($pivot))
+            throw new Exception('Not found');
+        return $pivot;
     }
 
 }

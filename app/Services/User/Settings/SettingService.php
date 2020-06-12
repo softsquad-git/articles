@@ -5,6 +5,7 @@ namespace App\Services\User\Settings;
 use App\Helpers\Avatar;
 use App\Helpers\Logs;
 use App\Helpers\UpdateStatusUser;
+use App\Helpers\Upload;
 use App\Helpers\VerifyEmail;
 use App\Mail\User\SuccessUpdateEmailMail;
 use App\Mail\User\VerifyNewEmailUserMail;
@@ -14,7 +15,7 @@ use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
+use \Exception;
 
 class SettingService
 {
@@ -25,7 +26,6 @@ class SettingService
     private $settingRepository;
 
     /**
-     * SettingService constructor.
      * @param SettingRepository $settingRepository
      */
     public function __construct(SettingRepository $settingRepository)
@@ -36,13 +36,11 @@ class SettingService
     /**
      * @param array $data
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function updateBasicData(array $data)
     {
         $item = $this->settingRepository->findSpecificDataUser();
-        if (empty($item))
-            throw new \Exception(sprintf('Try again'));
         $item->update($data);
         return $item;
     }
@@ -50,6 +48,7 @@ class SettingService
     /**
      * @param array $data
      * @return mixed
+     * @throws Exception
      */
     public function tryUpdateEmailUser(array $data)
     {
@@ -67,18 +66,14 @@ class SettingService
     /**
      * @param string $key
      * @return User
-     * @throws \Exception
+     * @throws Exception
      */
     public function updateEmailUser(string $key): User
     {
         $tmp_item = $this->settingRepository->findTmpChangeEmail();
-        if (empty($tmp_item))
-            throw new \Exception(sprintf('An error occured. Start the procedure of changing the email address again'));
         if ($tmp_item->_key != $key)
             throw new \Exception(sprintf('Code provided is invalid'));
         $item = $this->settingRepository->findUser();
-        if (empty($item))
-            throw new \Exception(sprintf('Users not found'));
         Logs::saveAuthLog(Logs::CHANGE_EMAIL);
         $item->update(['email' => $tmp_item->tmp_email]);
         UpdateStatusUser::setActivateUser(0);
@@ -89,22 +84,21 @@ class SettingService
     /**
      * @param $avatar
      * @return mixed
+     * @throws Exception
      */
     public function updateAvatar($avatar)
     {
         $user_avatar = $this->settingRepository->findAvatarUser();
-        $b_path = Avatar::PATH;
-        $file_name = md5(time() . Str::random(32)) . '.' . $avatar->getClientOriginalExtension();
-        $avatar->move($b_path, $file_name);
+        $fileName = Upload::singleFile(Avatar::PATH, $avatar);
         if (!empty($user_avatar)) {
             $user_avatar->update([
-                'src' => $file_name
+                'src' => $fileName
             ]);
             return $user_avatar;
         }
         return \App\Models\Users\Avatar::create([
             'user_id' => Auth::id(),
-            'src' => $file_name
+            'src' => $fileName
         ]);
     }
 
@@ -129,7 +123,7 @@ class SettingService
     /**
      * @param array $data
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function updatePassword(array $data)
     {
@@ -141,7 +135,7 @@ class SettingService
             Logs::saveAuthLog(Logs::CHANGE_PASSWORD);
             return $user;
         }
-        throw new \Exception('Podałeś nieprawidłowe hasło');
+        throw new Exception('Podałeś nieprawidłowe hasło');
     }
 
 }

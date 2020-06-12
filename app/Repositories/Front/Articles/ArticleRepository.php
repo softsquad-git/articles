@@ -4,6 +4,7 @@ namespace App\Repositories\Front\Articles;
 
 use App\Helpers\Status;
 use App\Models\Articles\Article;
+use \Exception;
 
 class ArticleRepository
 {
@@ -29,13 +30,13 @@ class ArticleRepository
     /**
      * @param int $id
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function findArticle(int $id)
     {
         $item = Article::find($id);
         if (empty($item))
-            throw new \Exception(sprintf('Article not found'));
+            throw new Exception(sprintf('Article not found'));
         return $item;
     }
 

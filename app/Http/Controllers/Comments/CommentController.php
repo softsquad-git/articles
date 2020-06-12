@@ -8,6 +8,9 @@ use App\Http\Resources\Comments\CommentResource;
 use App\Repositories\Comments\CommentRepository;
 use App\Services\Comments\CommentService;
 use Illuminate\Http\Request;
+use \Exception;
+use \Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use \Illuminate\Http\JsonResponse;
 
 class CommentController extends Controller
 {
@@ -23,7 +26,6 @@ class CommentController extends Controller
     private $commentsService;
 
     /**
-     * CommentController constructor.
      * @param CommentRepository $commentRepository
      * @param CommentService $commentService
      */
@@ -35,7 +37,7 @@ class CommentController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return JsonResponse|AnonymousResourceCollection
      */
     public function items(Request $request)
     {
@@ -45,51 +47,51 @@ class CommentController extends Controller
                 'resource_type' => $request->input('resource_type')
             ];
             return CommentResource::collection($this->commentsRepository->getComments($params));
-        } catch (\Exception $e) {
-            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        } catch (Exception $e) {
+            return $this->catchResponse($e);
         }
     }
 
     /**
      * @param CommentRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function store(CommentRequest $request)
     {
         try {
             $this->commentsService->store($request->all());
-            return response()->json(['success' => 1]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+            return $this->successResponse();
+        } catch (Exception $e) {
+            return $this->catchResponse($e);
         }
     }
 
     /**
      * @param CommentRequest $request
      * @param $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function update(CommentRequest $request, $id)
     {
         try {
             $this->commentsService->update($request->all(), $id);
-            return response()->json(['success' => 1]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+            return $this->successResponse();
+        } catch (Exception $e) {
+            return $this->catchResponse($e);
         }
     }
 
     /**
      * @param $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function remove($id)
     {
         try {
             $this->commentsService->remove($id);
-            return response()->json(['success' => 1]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+            return $this->successResponse();
+        } catch (Exception $e) {
+            return $this->catchResponse($e);
         }
     }
 }

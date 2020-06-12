@@ -5,6 +5,7 @@ namespace App\Services\Comments;
 use App\Models\Comments\Comment;
 use App\Repositories\Comments\CommentRepository;
 use Illuminate\Support\Facades\Auth;
+use \Exception;
 
 class CommentService
 {
@@ -14,7 +15,6 @@ class CommentService
     private $commentRepository;
 
     /**
-     * CommentService constructor.
      * @param CommentRepository $commentRepository
      */
     public function __construct(CommentRepository $commentRepository)
@@ -25,14 +25,14 @@ class CommentService
     /**
      * @param array $data
      * @return Comment
-     * @throws \Exception
+     * @throws Exception
      */
     public function store(array $data): Comment
     {
         $data['user_id'] = Auth::id();
         $item = Comment::create($data);
         if (empty($item))
-            throw new \Exception(sprintf('Refresh page and try again'));
+            throw new Exception(sprintf('Refresh page and try again'));
         return $item;
     }
 
@@ -40,13 +40,11 @@ class CommentService
      * @param array $data
      * @param int $id
      * @return Comment
-     * @throws \Exception
+     * @throws Exception
      */
     public function update(array $data, int $id): Comment
     {
         $item = $this->commentRepository->findComment($id);
-        if (empty($item))
-            throw new \Exception(sprintf('Comment not found'));
         $item->update($data);
         return $item;
     }
@@ -54,13 +52,11 @@ class CommentService
     /**
      * @param int $id
      * @return bool|null
-     * @throws \Exception
+     * @throws Exception
      */
     public function remove(int $id): ?bool
     {
         $item = $this->commentRepository->findComment($id);
-        if (empty($item))
-            throw new \Exception(sprintf('Comment not found'));
         return $item->delete();
     }
 

@@ -22,6 +22,10 @@ class ArticleService
      */
     private $articleRepository;
 
+    /**
+     * ArticleService constructor.
+     * @param ArticleRepository $articleRepository
+     */
     public function __construct(ArticleRepository $articleRepository)
     {
         $this->articleRepository = $articleRepository;

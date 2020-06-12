@@ -14,7 +14,6 @@ class LikeService
     private $likeRepository;
 
     /**
-     * LikeService constructor.
      * @param LikeRepository $likeRepository
      */
     public function __construct(LikeRepository $likeRepository)
@@ -44,7 +43,6 @@ class LikeService
         }
         // update like or dislike
         $item->update($data);
-
         return $item;
     }
 

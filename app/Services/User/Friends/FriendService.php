@@ -3,7 +3,7 @@
 namespace App\Services\User\Friends;
 
 use App\Helpers\FriendshipStatus;
-use App\Models\Friends\Friend;
+use \Exception;
 use App\Repositories\User\Friends\FriendRepository;
 use App\User;
 use Illuminate\Support\Facades\Auth;
@@ -33,25 +33,24 @@ class FriendService
     /**
      * @param int $id
      * @return bool|null
-     * @throws \Exception
+     * @throws Exception
      */
     public function remove(int $id): ?bool
     {
         $item = $this->friendRepository->findPivot($id);
-        if (empty($item))
-            throw new \Exception(sprintf('Not found'));
         return $item->delete();
     }
 
     /**
      * @param int $id
-     * @throws \Exception
+     * @return mixed
+     * @throws Exception
      */
     public function acceptInvitation(int $id)
     {
         $item = $this->friendRepository->findPivot($id);
         if (empty($item) || $item->recipient_id != Auth::id())
-            throw new \Exception(sprintf('Not found'));
+            throw new Exception(sprintf('Not found'));
         return $item->update([
             'status' => FriendshipStatus::FRIENDS
         ]);

@@ -15,7 +15,6 @@ class RatingArticleService
     private $ratingArticleRepository;
 
     /**
-     * RatingArticleService constructor.
      * @param RatingArticleRepository $ratingArticleRepository
      */
     public function __construct(RatingArticleRepository $ratingArticleRepository)

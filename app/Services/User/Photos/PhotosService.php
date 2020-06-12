@@ -46,7 +46,7 @@ class PhotosService
     public function store(int $album_id, array $photos): array
     {
         if ($album_id > 0) {
-            $album = $this->albumPhotosRepository->find($album_id);
+            $album = $this->albumPhotosRepository->findAlbum($album_id);
             if (empty($album))
                 throw new \Exception(sprintf('Album not found'));
         }

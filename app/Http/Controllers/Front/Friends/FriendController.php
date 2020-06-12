@@ -7,6 +7,8 @@ use App\Http\Resources\Friends\PeoplesResource;
 use \Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use App\Repositories\Front\Friends\FriendRepository;
 use Illuminate\Http\Request;
+use \Exception;
+use \Illuminate\Http\JsonResponse;
 
 class FriendController extends Controller
 {
@@ -25,11 +27,18 @@ class FriendController extends Controller
 
     /**
      * @param Request $request
-     * @return AnonymousResourceCollection
+     * @return JsonResponse|AnonymousResourceCollection
      */
     public function usersList(Request $request)
     {
-        $params = ['name' => $request->input('name'), 'ordering' => $request->input('ordering')];
-        return PeoplesResource::collection($this->friendRepository->usersList($params));
+        $params = [
+            'name' => $request->input('name'),
+            'ordering' => $request->input('ordering')
+        ];
+        try {
+            return PeoplesResource::collection($this->friendRepository->usersList($params));
+        } catch (Exception $e) {
+            return $this->catchResponse($e);
+        }
     }
 }

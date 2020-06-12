@@ -8,6 +8,9 @@ use App\Http\Resources\Follows\FollowResource;
 use App\Repositories\Follows\FollowRepository;
 use App\Services\Follows\FollowService;
 use Illuminate\Http\Request;
+use \Exception;
+use \Illuminate\Http\JsonResponse;
+use \Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class FollowController extends Controller
 {
@@ -22,7 +25,6 @@ class FollowController extends Controller
     private $followRepository;
 
     /**
-     * FollowController constructor.
      * @param FollowService $followService
      * @param FollowRepository $followRepository
      */
@@ -34,7 +36,7 @@ class FollowController extends Controller
 
     /**
      * @param FollowRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function follow(FollowRequest $request)
     {
@@ -45,52 +47,65 @@ class FollowController extends Controller
         $data = $request->all();
         try {
             $this->followService->follow($data, $params);
-            return response()->json(['success' => 1]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+            return $this->successResponse();
+        } catch (Exception $e) {
+            return $this->catchResponse($e);
         }
     }
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function getFollow(Request $request)
     {
         $resource_id = $request->input('resource_id');
         $resource_type = $request->input('resource_type');
-        if (empty($resource_id) || empty($resource_type)){
+        if (empty($resource_id) || empty($resource_type)) {
             return response()->json(['success' => 0]);
         }
         $follow = $this->followRepository->follow($resource_id, $resource_type);
         return response()->json(['follow' => $follow ? true : false]);
     }
 
+    /**
+     * @param string $resource_type
+     * @return JsonResponse|AnonymousResourceCollection
+     */
     public function getFollows(string $resource_type)
     {
         try {
             $items = $this->followRepository->getFollows($resource_type);
             return FollowResource::collection($items);
-        } catch (\Exception $e) {
-            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        } catch (Exception $e) {
+            return $this->catchResponse($e);
         }
     }
 
-    public function getWatchingYou(){
+    /**
+     * @return JsonResponse|AnonymousResourceCollection
+     */
+    public function getWatchingYou()
+    {
         try {
             $items = $this->followRepository->getWatchingYou();
             return FollowResource::collection($items);
-        } catch (\Exception $e){
-            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        } catch (Exception $e) {
+            return $this->catchResponse($e);
         }
     }
 
-    public function unFollow(int $id) {
+    /**
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function unFollow(int $id)
+    {
         try {
             $this->followService->remove($id);
-            return response()->json(['success' => 1]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+            return $this->successResponse();
+        } catch (Exception $e) {
+            return $this->catchResponse($e);
         }
     }
 }

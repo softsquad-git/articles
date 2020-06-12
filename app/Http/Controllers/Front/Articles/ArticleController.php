@@ -10,6 +10,7 @@ use App\Services\Front\Articles\ArticleService;
 use Illuminate\Http\Request;
 use \Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use \Illuminate\Http\JsonResponse;
+use \Exception;
 
 class ArticleController extends Controller
 {
@@ -24,7 +25,6 @@ class ArticleController extends Controller
     private $articleService;
 
     /**
-     * ArticleController constructor.
      * @param ArticleRepository $articleRepository
      * @param ArticleService $articleService
      */
@@ -36,7 +36,7 @@ class ArticleController extends Controller
 
     /**
      * @param Request $request
-     * @return AnonymousResourceCollection
+     * @return JsonResponse|AnonymousResourceCollection
      */
     public function items(Request $request)
     {
@@ -46,7 +46,11 @@ class ArticleController extends Controller
             'location' => $request->input('location'),
             'ordering' => $request->input('ordering')
         ];
-        return ArticlesListResource::collection($this->articleRepository->getArticles($search));
+        try {
+            return ArticlesListResource::collection($this->articleRepository->getArticles($search));
+        } catch (Exception $e) {
+            return $this->catchResponse($e);
+        }
     }
 
     /**
@@ -58,8 +62,8 @@ class ArticleController extends Controller
         try {
             $this->articleService->view($id);
             return new ArticleResource($this->articleRepository->findArticle($id));
-        } catch (\Exception $e) {
-            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        } catch (Exception $e) {
+            return $this->catchResponse($e);
         }
     }
 }

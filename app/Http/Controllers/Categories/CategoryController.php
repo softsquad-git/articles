@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Categories\CategoryResource;
 use App\Repositories\Categories\CategoryRepository;
 use Illuminate\Http\Request;
+use \Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use \Exception;
+use \Illuminate\Http\JsonResponse;
 
 class CategoryController extends Controller
 {
@@ -15,7 +18,6 @@ class CategoryController extends Controller
     private $categoryRepository;
 
     /**
-     * CategoryService constructor.
      * @param CategoryRepository $categoryRepository
      */
     public function __construct(CategoryRepository $categoryRepository)
@@ -24,21 +26,30 @@ class CategoryController extends Controller
     }
 
     /**
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return JsonResponse|AnonymousResourceCollection
      */
     public function all()
     {
-        return CategoryResource::collection($this->categoryRepository->getAllCategories());
+        try {
+            return CategoryResource::collection($this->categoryRepository->getAllCategories());
+        } catch (Exception $e) {
+            return $this->catchResponse($e);
+        }
     }
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return JsonResponse|AnonymousResourceCollection
      */
-    public function items(Request $request){
+    public function items(Request $request)
+    {
         $search = [
             'name' => $request->input('name')
         ];
-        return CategoryResource::collection($this->categoryRepository->getCategories($search));
+        try {
+            return CategoryResource::collection($this->categoryRepository->getCategories($search));
+        } catch (Exception $e) {
+            return $this->catchResponse($e);
+        }
     }
 }

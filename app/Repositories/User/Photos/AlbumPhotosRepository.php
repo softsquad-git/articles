@@ -4,10 +4,15 @@ namespace App\Repositories\User\Photos;
 
 use App\Models\Users\Photos\AlbumPhotos;
 use Illuminate\Support\Facades\Auth;
+use \Exception;
 
 class AlbumPhotosRepository
 {
 
+    /**
+     * @param array $params
+     * @return mixed
+     */
     public function items(array $params)
     {
         $items = AlbumPhotos::orderBy('id', $params['order_by'] ?? 'DESC')
@@ -19,9 +24,17 @@ class AlbumPhotosRepository
             ->paginate(6);
     }
 
-    public function find($id)
+    /**
+     * @param $id
+     * @return mixed
+     * @throws Exception
+     */
+    public function findAlbum($id)
     {
-        return AlbumPhotos::find($id);
+        $album = AlbumPhotos::find($id);
+        if (empty($album))
+            throw new Exception('Album not found');
+        return $album;
     }
 
 }

@@ -5,6 +5,7 @@ namespace App\Services\User\Photos;
 use App\Models\Users\Photos\AlbumPhotos;
 use App\Repositories\User\Photos\AlbumPhotosRepository;
 use Illuminate\Support\Facades\Auth;
+use \Exception;
 
 class AlbumPhotosService
 {
@@ -14,7 +15,6 @@ class AlbumPhotosService
     private $albumPhotosRepository;
 
     /**
-     * AlbumPhotosService constructor.
      * @param AlbumPhotosRepository $albumPhotosRepository
      */
     public function __construct(AlbumPhotosRepository $albumPhotosRepository)
@@ -25,7 +25,7 @@ class AlbumPhotosService
     /**
      * @param array $data
      * @return AlbumPhotos
-     * @throws \Exception
+     * @throws Exception
      */
     public function store(array $data): AlbumPhotos
     {
@@ -40,13 +40,11 @@ class AlbumPhotosService
      * @param array $data
      * @param int $id
      * @return AlbumPhotos
-     * @throws \Exception
+     * @throws Exception
      */
     public function update(array $data, int $id): AlbumPhotos
     {
-        $item = $this->albumPhotosRepository->find($id);
-        if (empty($item))
-            throw new \Exception(sprintf('Album not found'));
+        $item = $this->albumPhotosRepository->findAlbum($id);
         $item->update($data);
         return $item;
     }
@@ -54,13 +52,11 @@ class AlbumPhotosService
     /**
      * @param int $id
      * @return bool|null
-     * @throws \Exception
+     * @throws Exception
      */
     public function remove(int $id): ?bool
     {
-        $item = $this->albumPhotosRepository->find($id);
-        if (empty($item))
-            throw new \Exception(sprintf('Album not found'));
+        $item = $this->albumPhotosRepository->findAlbum($id);
         return $item->delete();
     }
 

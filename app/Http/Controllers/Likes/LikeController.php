@@ -7,6 +7,8 @@ use App\Http\Requests\Likes\LikeRequest;
 use App\Repositories\Likes\LikeRepository;
 use App\Services\Likes\LikeService;
 use Illuminate\Http\Request;
+use \Exception;
+use \Illuminate\Http\JsonResponse;
 
 class LikeController extends Controller
 {
@@ -21,7 +23,6 @@ class LikeController extends Controller
     private $likeService;
 
     /**
-     * LikeController constructor.
      * @param LikeRepository $likeRepository
      * @param LikeService $likeService
      */
@@ -33,7 +34,7 @@ class LikeController extends Controller
 
     /**
      * @param LikeRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function like(LikeRequest $request)
     {
@@ -43,15 +44,15 @@ class LikeController extends Controller
         ];
         try {
             $this->likeService->like($request->all(), $params);
-            return response()->json(['success' => 1]);
-        } catch (\Exception $e){
-            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+            return $this->successResponse();
+        } catch (Exception $e) {
+            return $this->catchResponse($e);
         }
     }
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function getLike(Request $request)
     {
@@ -62,8 +63,8 @@ class LikeController extends Controller
         try {
             $like = $this->likeRepository->like($params);
             return response()->json(['like' => $like->like]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        } catch (Exception $e) {
+            return $this->catchResponse($e);
         }
     }
 }

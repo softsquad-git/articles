@@ -5,12 +5,13 @@ namespace App\Http\Controllers\Users\Settings;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\Settings\SettingRequest;
 use App\Http\Requests\User\Settings\TryUpdateEmailUserRequest;
-use App\Http\Requests\User\Settings\TryUpdatePasswordUserRequest;
 use App\Http\Requests\User\Settings\UpdateAvatarRequest;
 use App\Http\Requests\User\Settings\UpdateEmailUserRequest;
 use App\Http\Requests\User\Settings\UpdatePasswordUserRequest;
 use App\Repositories\User\Settings\SettingRepository;
 use App\Services\User\Settings\SettingService;
+use \Illuminate\Http\JsonResponse;
+use \Exception;
 
 class SettingController extends Controller
 {
@@ -24,7 +25,6 @@ class SettingController extends Controller
     private $settingRepository;
 
     /**
-     * SettingController constructor.
      * @param SettingService $settingService
      * @param SettingRepository $settingRepository
      */
@@ -36,104 +36,110 @@ class SettingController extends Controller
 
     /**
      * @param SettingRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function updateBasicData(SettingRequest $request)
     {
         try {
             $this->settingService->updateBasicData($request->all());
-            return response()->json(['success' => 1]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+            return $this->successResponse();
+        } catch (Exception $e) {
+            return $this->catchResponse($e);
         }
     }
 
     /**
      * @param TryUpdateEmailUserRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function tryUpdateEmailUser(TryUpdateEmailUserRequest $request)
     {
         try {
             $this->settingService->tryUpdateEmailUser($request->all());
-            return response()->json(['success' => 1]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+            return $this->successResponse();
+        } catch (Exception $e) {
+            return $this->catchResponse($e);
         }
     }
 
     /**
      * @param UpdateEmailUserRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function updateEmailUser(UpdateEmailUserRequest $request)
     {
         try {
             $this->settingService->updateEmailUser($request->_key);
-            return response()->json(['success' => 1]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+            return $this->successResponse();
+        } catch (Exception $e) {
+            return $this->catchResponse($e);
         }
     }
 
     /**
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function checkTmpEmail()
     {
         try {
             return response()->json(['is_tmp' => $this->settingRepository->findTmpChangeEmail() ? 1 : 0]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        } catch (Exception $e) {
+            return $this->catchResponse($e);
         }
     }
 
     /**
      * @param UpdateAvatarRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function updateAvatar(UpdateAvatarRequest $request)
     {
         try {
             $this->settingService->updateAvatar($request->file('avatar'));
-            return response()->json(['success' => 1]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+            return $this->successResponse();
+        } catch (Exception $e) {
+            return $this->catchResponse($e);
         }
     }
 
     /**
      * @param bool $type
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function setTemplateMode(bool $type)
     {
-        try{
+        try {
             $mode = $this->settingService->setTemplateMode($type);
             return response()->json(['success' => 1, 'mode' => $mode]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        } catch (Exception $e) {
+            return $this->catchResponse($e);
         }
     }
 
+    /**
+     * @return JsonResponse
+     */
     public function removeAccount()
     {
         try {
             $this->settingService->removeAccount();
-            return response()->json(['success' => 1]);
-        } catch (\Exception $e)
-        {
-            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+            return $this->successResponse();
+        } catch (Exception $e) {
+            return $this->catchResponse($e);
         }
     }
 
+    /**
+     * @param UpdatePasswordUserRequest $request
+     * @return JsonResponse
+     */
     public function updatePassword(UpdatePasswordUserRequest $request)
     {
         try {
             $this->settingService->updatePassword($request->all());
-            return response()->json(['success' => 1]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+            return $this->successResponse();
+        } catch (Exception $e) {
+            return $this->catchResponse($e);
         }
     }
 

@@ -3,6 +3,7 @@
 namespace App\Repositories\Comments;
 
 use App\Models\Comments\ReplyComment;
+use \Exception;
 
 class ReplyCommentRepository
 {
@@ -12,7 +13,6 @@ class ReplyCommentRepository
     private $commentRepository;
 
     /**
-     * ReplyCommentRepository constructor.
      * @param CommentRepository $commentRepository
      */
     public function __construct(CommentRepository $commentRepository)
@@ -23,7 +23,7 @@ class ReplyCommentRepository
     /**
      * @param int $id
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function getAnswersComment(int $id)
     {
@@ -38,10 +38,14 @@ class ReplyCommentRepository
     /**
      * @param int $id
      * @return mixed
+     * @throws Exception
      */
     public function findReplyComment(int $id)
     {
-        return ReplyComment::find($id);
+        $reply = ReplyComment::find($id);
+        if (empty($reply))
+            throw new Exception('Reply not found');
+        return $reply;
     }
 
 }

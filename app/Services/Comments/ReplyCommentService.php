@@ -5,6 +5,7 @@ namespace App\Services\Comments;
 use App\Models\Comments\ReplyComment;
 use App\Repositories\Comments\ReplyCommentRepository;
 use Illuminate\Support\Facades\Auth;
+use \Exception;
 
 class ReplyCommentService
 {
@@ -14,7 +15,6 @@ class ReplyCommentService
     private $replyCommentRepository;
 
     /**
-     * ReplyCommentService constructor.
      * @param ReplyCommentRepository $replyCommentRepository
      */
     public function __construct(ReplyCommentRepository $replyCommentRepository)
@@ -25,7 +25,7 @@ class ReplyCommentService
     /**
      * @param array $data
      * @return ReplyComment
-     * @throws \Exception
+     * @throws Exception
      */
     public function store(array $data): ReplyComment
     {
@@ -36,7 +36,7 @@ class ReplyCommentService
         $data['user_id'] = Auth::id();
         $item = ReplyComment::create($data);
         if (empty($item))
-            throw new \Exception(sprintf('Try again'));
+            throw new Exception('Try again');
         return $item;
     }
 
@@ -44,13 +44,11 @@ class ReplyCommentService
      * @param array $data
      * @param int $id
      * @return ReplyComment
-     * @throws \Exception
+     * @throws Exception
      */
     public function update(array $data, int $id): ReplyComment
     {
         $item = $this->replyCommentRepository->findReplyComment($id);
-        if (empty($item))
-            throw new \Exception(sprintf('Reply not found'));
         $item->update($data);
         return $item;
     }
@@ -58,13 +56,11 @@ class ReplyCommentService
     /**
      * @param int $id
      * @return bool|null
-     * @throws \Exception
+     * @throws Exception
      */
     public function remove(int $id): ?bool
     {
         $item = $this->replyCommentRepository->findReplyComment($id);
-        if (empty($item))
-            throw new \Exception(sprintf('Reply not found'));
         return $item->delete();
     }
 

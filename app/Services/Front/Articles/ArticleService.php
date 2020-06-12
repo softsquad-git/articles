@@ -3,6 +3,7 @@
 namespace App\Services\Front\Articles;
 
 use App\Repositories\Front\Articles\ArticleRepository;
+use \Exception;
 
 class ArticleService
 {
@@ -12,7 +13,6 @@ class ArticleService
     private $articleRepository;
 
     /**
-     * ArticleService constructor.
      * @param ArticleRepository $articleRepository
      */
     public function __construct(ArticleRepository $articleRepository)
@@ -23,13 +23,13 @@ class ArticleService
     /**
      * @param int $id
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function view(int $id)
     {
         $item = $this->articleRepository->findArticle($id);
         if (empty($item))
-            throw new \Exception(sprintf('Article not found'));
+            throw new Exception(sprintf('Article not found'));
         $_views = $item->views;
         $item->update([
             'views' => $_views + 1

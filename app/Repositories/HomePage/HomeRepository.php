@@ -21,6 +21,9 @@ class HomeRepository
         $this->categoryRepository = $categoryRepository;
     }
 
+    /**
+     * @return mixed
+     */
     public function getLatestThreeArticles()
     {
         return Article::orderBy('id', 'DESC')
@@ -28,6 +31,9 @@ class HomeRepository
             ->get();
     }
 
+    /**
+     * @return mixed
+     */
     public function getLatestNews()
     {
         $articles = Article::orderBy('id', 'DESC')
@@ -36,6 +42,9 @@ class HomeRepository
         return $articles->random(4);
     }
 
+    /**
+     * @return mixed
+     */
     public function getPopularNews()
     {
         return Article::orderBy('views', 'DESC')
@@ -43,11 +52,18 @@ class HomeRepository
             ->get();
     }
 
-    public function getCategories(){
+    /**
+     * @return mixed
+     */
+    public function getCategories()
+    {
         return Category::where('status', 1)
             ->get();
     }
 
+    /**
+     * @return mixed
+     */
     public function getAuthorNews()
     {
         return Article::where('status', Status::ARTICLE_AUTHOR)
@@ -55,6 +71,9 @@ class HomeRepository
             ->get();
     }
 
+    /**
+     * @return mixed
+     */
     public function getSelectedPhotos()
     {
         return Photos::orderBy('id', 'DESC')

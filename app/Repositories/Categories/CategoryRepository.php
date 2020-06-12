@@ -2,11 +2,17 @@
 
 namespace App\Repositories\Categories;
 
+use \Exception;
 use App\Models\Categories\Category;
+use \Illuminate\Database\Eloquent\Collection;
 
 class CategoryRepository
 {
 
+    /**
+     * @param array $search
+     * @return mixed
+     */
     public function getCategories(array $search)
     {
         $name = $search['name'];
@@ -17,14 +23,25 @@ class CategoryRepository
             ->paginate(20);
     }
 
+    /**
+     * @return Category[]|Collection
+     */
     public function getAllCategories()
     {
         return Category::all();
     }
 
+    /**
+     * @param int $id
+     * @return mixed
+     * @throws Exception
+     */
     public function findCategory(int $id)
     {
-        return Category::find($id);
+        $category = Category::find($id);
+        if (empty($category))
+            throw new Exception('Category not found');
+        return $category;
     }
 
 }

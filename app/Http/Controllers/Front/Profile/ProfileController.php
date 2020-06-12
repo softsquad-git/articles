@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Articles\ArticleResource;
 use App\Http\Resources\Friends\FriendResource;
 use App\Http\Resources\User\Photos\AlbumPhotosResource;
-use App\Http\Resources\User\Photos\PhotosResource;
+use \Exception;
 use App\Http\Resources\Users\UserResource;
 use App\Repositories\Front\Profile\ProfileRepository;
 use App\Repositories\User\Friends\FriendRepository;
 use Illuminate\Http\Request;
+use \Illuminate\Http\JsonResponse;
+use \Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ProfileController extends Controller
 {
@@ -24,7 +26,6 @@ class ProfileController extends Controller
     private $friendRepository;
 
     /**
-     * ProfileController constructor.
      * @param ProfileRepository $profileRepository
      * @param FriendRepository $friendRepository
      */
@@ -39,20 +40,20 @@ class ProfileController extends Controller
 
     /**
      * @param int $id
-     * @return UserResource|\Illuminate\Http\JsonResponse
+     * @return UserResource|JsonResponse
      */
     public function user(int $id)
     {
         try {
             return new UserResource($this->profileRepository->findUser($id));
-        }catch (\Exception $e) {
-            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        } catch (Exception $e) {
+            return $this->catchResponse($e);
         }
     }
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return JsonResponse|AnonymousResourceCollection
      */
     public function articles(Request $request)
     {
@@ -63,27 +64,27 @@ class ProfileController extends Controller
         ];
         try {
             return ArticleResource::collection($this->profileRepository->articles($params));
-        } catch (\Exception $e){
-            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        } catch (Exception $e) {
+            return $this->catchResponse($e);
         }
     }
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return JsonResponse|AnonymousResourceCollection
      */
     public function albums(Request $request)
     {
         try {
             return AlbumPhotosResource::collection($this->profileRepository->albums($request->input('user_id')));
         } catch (\Exception $e) {
-            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+            return $this->catchResponse($e);
         }
     }
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function photos(Request $request)
     {
@@ -92,21 +93,22 @@ class ProfileController extends Controller
             return response()->json([
                 'data' => $items
             ]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        } catch (Exception $e) {
+            return $this->catchResponse($e);
         }
     }
 
     /**
-     * @param int $user_id
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @param int $userId
+     * @return JsonResponse|AnonymousResourceCollection
      */
-    public function friends(int $user_id){
+    public function friends(int $userId)
+    {
         try {
-            $items = $this->friendRepository->getFriends($user_id);
+            $items = $this->friendRepository->getFriends($userId);
             return FriendResource::collection($items);
-        } catch (\Exception $e){
-            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        } catch (Exception $e) {
+            return $this->catchResponse($e);
         }
     }
 }

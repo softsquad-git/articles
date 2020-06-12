@@ -8,6 +8,9 @@ use App\Http\Resources\User\Photos\PhotosResource;
 use App\Repositories\User\Photos\AlbumPhotosRepository;
 use App\Repositories\User\Photos\PhotosRepository;
 use App\Services\User\Photos\PhotosService;
+use \Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use \Exception;
+use \Illuminate\Http\JsonResponse;
 
 class PhotoController extends Controller
 {
@@ -26,12 +29,15 @@ class PhotoController extends Controller
     private $albumRepository;
 
     /**
-     * PhotoController constructor.
      * @param PhotosService $photosService
      * @param PhotosRepository $photosRepository
      * @param AlbumPhotosRepository $albumRepository
      */
-    public function __construct(PhotosService $photosService, PhotosRepository $photosRepository, AlbumPhotosRepository $albumRepository)
+    public function __construct(
+        PhotosService $photosService,
+        PhotosRepository $photosRepository,
+        AlbumPhotosRepository $albumRepository
+    )
     {
         $this->photosService = $photosService;
         $this->photosRepository = $photosRepository;
@@ -40,20 +46,20 @@ class PhotoController extends Controller
 
     /**
      * @param int $album_id
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return JsonResponse|AnonymousResourceCollection
      */
     public function items(int $album_id)
     {
         try {
             return PhotosResource::collection($this->photosRepository->items($album_id));
-        } catch (\Exception $e) {
-            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+        } catch (Exception $e) {
+            return $this->catchResponse($e);
         }
     }
 
     /**
      * @param PhotosRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function store(PhotosRequest $request)
     {
@@ -65,21 +71,21 @@ class PhotoController extends Controller
             }
             return response()->json(['success' => 0, 'msg' => 'No photos']);
         } catch (\Exception $e) {
-            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+            return $this->catchResponse($e);
         }
     }
 
     /**
      * @param int $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function remove(int $id)
     {
         try {
             $this->photosService->remove($id);
-            return response()->json(['success' => 1]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+            return $this->successResponse();
+        } catch (Exception $e) {
+            return $this->catchResponse($e);
         }
     }
 
