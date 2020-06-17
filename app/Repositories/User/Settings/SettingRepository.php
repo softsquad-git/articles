@@ -36,15 +36,11 @@ class SettingRepository
 
     /**
      * @return mixed
-     * @throws Exception
      */
     public function findTmpChangeEmail()
     {
-        $tmpEmail = ChangeEmail::where('user_id', Auth::id())
+        return ChangeEmail::where('user_id', Auth::id())
             ->first();
-        if (empty($tmpEmail))
-            throw new Exception('Not found');
-        return $tmpEmail;
     }
 
     /**

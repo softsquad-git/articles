@@ -7,7 +7,6 @@ use App\Helpers\Logs;
 use App\Helpers\UpdateStatusUser;
 use App\Helpers\Upload;
 use App\Helpers\VerifyEmail;
-use App\Mail\User\SuccessUpdateEmailMail;
 use App\Mail\User\VerifyNewEmailUserMail;
 use App\Models\Users\ChangeEmail;
 use App\Repositories\User\Settings\SettingRepository;

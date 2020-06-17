@@ -14,7 +14,8 @@ class ArticlesListResource extends JsonResource
         $data['image'] = ArticleImage::topImage($this->images->first());
         $data['category'] = [
             'id' => $this->category_id,
-            'name' => $this->category->name
+            'name' => $this->category->name,
+            'alias' => $this->category->alias
         ];
         $data['user'] = [
             'id' => $this->user_id,

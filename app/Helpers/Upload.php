@@ -20,7 +20,7 @@ class Upload
             $file->move($src, $fileName);
             return $fileName;
         } catch (Exception $e) {
-            throw new Exception('Upload file error');
+            throw new Exception($e->getMessage());
         }
     }
 }

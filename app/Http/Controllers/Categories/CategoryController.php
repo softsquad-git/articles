@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Categories;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ArticlesListResource;
 use App\Http\Resources\Categories\CategoryResource;
 use App\Repositories\Categories\CategoryRepository;
 use Illuminate\Http\Request;
@@ -16,6 +17,7 @@ class CategoryController extends Controller
      * @var CategoryRepository
      */
     private $categoryRepository;
+
 
     /**
      * @param CategoryRepository $categoryRepository
@@ -50,6 +52,28 @@ class CategoryController extends Controller
             return CategoryResource::collection($this->categoryRepository->getCategories($search));
         } catch (Exception $e) {
             return $this->catchResponse($e);
+        }
+    }
+
+    /**
+     * @param string $alias
+     * @param Request $request
+     * @return JsonResponse|AnonymousResourceCollection
+     */
+    public function getArticlesInCategory(Request $request, string $alias)
+    {
+        try {
+            $params = [
+                'title' => $request->input('title'),
+                'location' => $request->input('location'),
+                'ordering' => $request->input('ordering')
+            ];
+            return ArticlesListResource::collection($this->categoryRepository->articlesInCategory($alias, $params));
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => 0,
+                'msg' => $e->getMessage()
+            ]);
         }
     }
 }

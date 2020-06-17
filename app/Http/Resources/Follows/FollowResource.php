@@ -4,6 +4,7 @@ namespace App\Http\Resources\Follows;
 
 use App\Helpers\ArticleImage;
 use App\Http\Resources\Articles\ArticleResource;
+use App\Http\Resources\ArticlesListResource;
 use App\Http\Resources\Users\UserResource;
 use App\Models\Articles\Article;
 use App\Services\User\Articles\ArticleService;
@@ -24,7 +25,7 @@ class FollowResource extends JsonResource
         $data = [];
         $data['id'] = $this->id;
         if ($this->resource_type == ArticleService::RESOURCE_TYPE){
-            $data['article'] = new ArticleResource(Article::find($this->resource_id));
+            $data['article'] = new ArticlesListResource(Article::find($this->resource_id));
         } elseif ($this->resource_type == 'USER'){
             $data['user'] = new UserResource(User::find($this->resource_id == Auth::id() ? $this->user_id : $this->resource_id));
         }
