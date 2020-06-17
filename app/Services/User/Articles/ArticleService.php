@@ -111,6 +111,11 @@ class ArticleService
         $item = $this->articleRepository->find($id);
         if (empty($item))
             throw new Exception(sprintf('Article not found'));
+        if ($item->status == Status::ARTICLE_IMPROVE
+            || $item->status == Status::ARTICLE_LOCKED
+            || $item->status == Status::ARTICLE_NEW) {
+            throw new Exception('Forbidden');
+        }
         if ($item->status == Status::ARTICLE_ARCHIVE) {
             $item->update([
                 'status' => Status::ARTICLE_PUBLISHED
