@@ -5,6 +5,7 @@ Route::post('article/{id}', 'Front\Articles\ArticleController@item');
 Route::post('get-images-article/{id}', 'Users\Articles\ArticleController@getImages');
 Route::post('categories-all', 'Categories\CategoryController@all');
 Route::post('articles-in-category/{alias}', 'Categories\CategoryController@getArticlesInCategory');
+Route::post('pay', 'Payment\PaymentDotPayController@pay');
 Route::group(['prefix' => 'comments'], function () {
     Route::post('', 'Comments\CommentController@items');     #list comments
     Route::group(['prefix' => 'answers'], function () {
