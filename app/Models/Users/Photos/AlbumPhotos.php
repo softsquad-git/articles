@@ -13,7 +13,9 @@ class AlbumPhotos extends Model
     protected $fillable = [
         'user_id',
         'name',
-        'description'
+        'description',
+        'is_public',
+        'type'
     ];
 
     public function user()

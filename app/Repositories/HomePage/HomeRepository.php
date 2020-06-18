@@ -77,6 +77,12 @@ class HomeRepository
     public function getSelectedPhotos()
     {
         return Photos::orderBy('id', 'DESC')
+            ->whereHas('album', function ($q) {
+                $q->where([
+                    'is_public' => 1,
+                    'type' => Status::TYPE_ALBUM_PUBLIC
+                ]);
+            })
             ->limit(18)
             ->get();
     }

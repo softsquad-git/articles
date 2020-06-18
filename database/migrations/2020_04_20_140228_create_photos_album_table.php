@@ -18,6 +18,8 @@ class CreatePhotosAlbumTable extends Migration
             $table->integer('user_id')->index();
             $table->string('name');
             $table->text('description')->nullable();
+            $table->boolean('is_public')->default(0);
+            $table->string('type');
             $table->timestamps();
         });
     }

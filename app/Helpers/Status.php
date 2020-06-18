@@ -13,4 +13,6 @@ class Status
     const FEATURED = 'FEATURED';
     const R_USER = 1;
     const R_ADMIN = 2;
+    const TYPE_ALBUM_PUBLIC = 'PUBLIC';
+    const TYPE_ALBUM_PRIVATE = 'PRIVATE';
 }

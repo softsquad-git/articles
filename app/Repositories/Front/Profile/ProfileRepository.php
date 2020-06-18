@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Front\Profile;
 
+use App\Helpers\Status;
 use App\Models\Articles\Article;
 use \Exception;
 use App\Repositories\User\Photos\AlbumPhotosRepository;
@@ -63,7 +64,12 @@ class ProfileRepository
     public function albums(int $id)
     {
         $user = $this->findUser($id);
-        return $user->albums;
+        return $user->albums()
+            ->where([
+                'is_public' => 1,
+                'type' => Status::TYPE_ALBUM_PUBLIC
+            ])
+            ->get();
     }
 
     /**
