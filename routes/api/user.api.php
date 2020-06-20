@@ -15,8 +15,8 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth:api'], function () {
                 Route::post('get', 'Users\Experts\ExpertOpinionController@getOpinions');
                 Route::post('is-expert/{categoryId}', 'Users\Experts\ExpertOpinionController@isExpertInArticle');
                 Route::post('store', 'Users\Experts\ExpertOpinionController@store');
-                Route::post('update/{opinionId}', 'Users\Experts\ExpertOpinion@update');
-                Route::post('remove/{opinionId}', 'Users\Experts\ExpertOpinion@remove');
+                Route::post('update/{opinionId}', 'Users\Experts\ExpertOpinionController@update');
+                Route::post('remove/{opinionId}', 'Users\Experts\ExpertOpinionController@remove');
             });
         });
         Route::group(['prefix' => 'chat'], function () {
