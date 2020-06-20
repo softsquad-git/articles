@@ -7,6 +7,18 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth:api'], function () {
     Route::post('logout', 'Auth\AuthController@logout');
     Route::post('', 'LoggedController@user');
     Route::group(['middleware' => 'activated'], function () {
+        Route::group(['prefix' => 'experts'], function () {
+            Route::post('get-categories', 'Users\Experts\ExpertController@getCategories');
+            Route::post('register', 'Users\Experts\ExpertController@registerExpert');
+            Route::post('remove/{categoryId}', 'Users\Experts\ExpertController@remove');
+            Route::group(['prefix' => 'opinions'], function () {
+                Route::post('get', 'Users\Experts\ExpertOpinionController@getOpinions');
+                Route::post('is-expert/{categoryId}', 'Users\Experts\ExpertOpinionController@isExpertInArticle');
+                Route::post('store', 'Users\Experts\ExpertOpinionController@store');
+                Route::post('update/{opinionId}', 'Users\Experts\ExpertOpinion@update');
+                Route::post('remove/{opinionId}', 'Users\Experts\ExpertOpinion@remove');
+            });
+        });
         Route::group(['prefix' => 'chat'], function () {
             Route::post('', 'Chat\ChatController@getConversations');
             Route::post('store', 'Chat\ChatController@store');
@@ -90,7 +102,7 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth:api'], function () {
         });
     });
 });
-Route::get('/t', function (){
+Route::get('/t', function () {
     event(new \App\Events\Chat\SendChatMessageEvent());
     dd('Success');
 });

@@ -76,4 +76,15 @@ class CategoryRepository
         return $this->articleRepository->getArticles($params);
     }
 
+    /**
+     * @param array $ids
+     * @return mixed
+     */
+    public function getFewCategories(array $ids)
+    {
+        return Category::whereIn('id', $ids)
+            ->where('status', 1)
+            ->get();
+    }
+
 }

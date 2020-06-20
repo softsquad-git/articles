@@ -6,6 +6,7 @@ use App\Models\Categories\Category;
 use App\Models\Comments\Comment;
 use App\Models\Follows\Follow;
 use App\Models\Likes\Like;
+use App\Models\Users\Experts\ExpertArticleOpinion;
 use App\Services\User\Articles\ArticleService;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
@@ -23,7 +24,8 @@ class Article extends Model
         'is_comment',
         'is_rating',
         'status',
-        'views'
+        'views',
+        'is_promo'
     ];
 
     public function user()
@@ -57,6 +59,11 @@ class Article extends Model
     {
         return $this->hasMany(Comment::class, 'resource_id', 'id')
             ->Where('resource_type', ArticleService::RESOURCE_TYPE);
+    }
+
+    public function opinions()
+    {
+        return $this->hasMany(ExpertArticleOpinion::class, 'article_id');
     }
 
 }

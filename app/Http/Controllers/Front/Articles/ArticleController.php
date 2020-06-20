@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Front\Articles;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Articles\ArticleResource;
 use App\Http\Resources\ArticlesListResource;
+use App\Http\Resources\User\Experts\OpinionsExpertsResource;
 use App\Repositories\Front\Articles\ArticleRepository;
 use App\Services\Front\Articles\ArticleService;
 use Illuminate\Http\Request;
@@ -62,6 +63,19 @@ class ArticleController extends Controller
         try {
             $this->articleService->view($id);
             return new ArticleResource($this->articleRepository->findArticle($id));
+        } catch (Exception $e) {
+            return $this->catchResponse($e);
+        }
+    }
+
+    /**
+     * @param int $articleId
+     * @return JsonResponse|AnonymousResourceCollection
+     */
+    public function opinionsExperts(int $articleId)
+    {
+        try {
+            return OpinionsExpertsResource::collection($this->articleRepository->opinionsExperts($articleId));
         } catch (Exception $e) {
             return $this->catchResponse($e);
         }

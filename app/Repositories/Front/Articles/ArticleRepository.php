@@ -40,4 +40,15 @@ class ArticleRepository
         return $item;
     }
 
+    /**
+     * @param int $articleId
+     * @return mixed
+     * @throws Exception
+     */
+    public function opinionsExperts(int $articleId)
+    {
+        return $this->findArticle($articleId)
+            ->opinions;
+    }
+
 }

@@ -9,6 +9,7 @@ use App\Models\Comments\Comment;
 use App\Models\Follows\Follow;
 use App\Models\Likes\Like;
 use App\Models\Users\Avatar;
+use App\Models\Users\Experts\Expert;
 use App\Models\Users\Photos\AlbumPhotos;
 use App\Models\Users\Photos\Photos;
 use App\Models\Users\SpecificData;
@@ -96,6 +97,11 @@ class User extends Authenticatable implements JWTSubject
     public function photos()
     {
         return $this->hasMany(Photos::class, 'user_id');
+    }
+
+    public function expert()
+    {
+        return $this->hasOne(Expert::class, 'user_id');
     }
 
 }
