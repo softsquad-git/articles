@@ -8,6 +8,10 @@ use Illuminate\Support\Facades\Auth;
 class UpdateStatusUser
 {
 
+    /**
+     * @param int $value
+     * @return bool
+     */
     public static function setActivateUser(int $value)
     {
         if (Auth::user()->activated != $value && $value == 0) {

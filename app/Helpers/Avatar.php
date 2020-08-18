@@ -6,26 +6,30 @@ use App\Models\Users\SpecificData;
 
 class Avatar
 {
-    const PATH = 'assets/data/avatars/';
     const SEX_MALE = 'MALE';
     const SEX_FEMALE = 'FEMALE';
 
-    public static function src($user_id)
+    /**
+     * @param int $userId
+     * @return string
+     */
+    public static function src(int $userId): string
     {
-        $avatar = \App\Models\Users\Avatar::where('user_id', $user_id)->first();
+        $avatarPath = config('app.enum.defaults.paths.avatar');
+        $avatar = \App\Models\Users\Avatar::where('user_id', $userId)->first();
         if (!empty($avatar)) {
-            return asset(Avatar::PATH . $avatar->src);
+            return asset($avatarPath . $avatar->src);
         }
-        $user = SpecificData::where('user_id', $user_id)->first();
+        $user = SpecificData::where('user_id', $userId)->first();
         if (!empty($user) && !empty($user->sex)) {
             $sex = $user->sex;
             if ($sex === Avatar::SEX_MALE) {
-                return asset(Avatar::PATH . 'df_male.png');
+                return asset($avatarPath . config('app.enum.defaults.filenames.sex.male'));
             } elseif ($sex === Avatar::SEX_FEMALE) {
-                return asset(Avatar::PATH . 'df_female.png');
+                return asset($avatarPath . config('app.enum.defaults.filenames.sex.female'));
             }
         }
-        return asset(Avatar::PATH . 'df.png');
+        return asset($avatarPath . config('app.enum.defaults.filenames.avatar'));
     }
 
 }

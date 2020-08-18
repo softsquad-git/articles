@@ -228,5 +228,19 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
     ],
-
+    'enum' => [
+        'defaults' => [
+            'filenames' => [
+                'sex' => [
+                    'male' => 'df_male.png',
+                    'female' => 'df_female.png'
+                ],
+                'avatar' => 'df.png',
+                'article' => 'df.jpg'
+            ],
+            'paths' => [
+                'avatar' => 'assets/data/avatars/'
+            ]
+        ]
+    ]
 ];

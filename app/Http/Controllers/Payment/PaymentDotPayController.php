@@ -32,7 +32,7 @@ class PaymentDotPayController extends Controller
             'ch_lock' => '1',
             'url' => config('dotpay.options.url'),
             'urlc' => config('dotpay.options.curl'),
-            'expiration_datetime' => '2017-12-01T16:48:00',
+            'expiration_datetime' => '2021-12-01T16:48:00',
             'payer' => [
                 'first_name' => 'John',
                 'last_name' => 'Smith',

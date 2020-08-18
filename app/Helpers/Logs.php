@@ -9,13 +9,16 @@ use Illuminate\Support\Facades\Log;
 
 class Logs
 {
-    const LOGOUT = 'LOGOUT';
-    const LOGIN = 'LOGIN';
-    const REGISTER = 'REGISTER';
-    const CHANGE_PASSWORD = 'CHANGE_PASSWORD';
-    const REMIND_PASSWORD = 'REMIND_PASSWORD';
-    const CHANGE_EMAIL = 'CHANGE_EMAIL';
+    public const LOGOUT = 'LOGOUT';
+    public const LOGIN = 'LOGIN';
+    public const REGISTER = 'REGISTER';
+    public const CHANGE_PASSWORD = 'CHANGE_PASSWORD';
+    public const REMIND_PASSWORD = 'REMIND_PASSWORD';
+    public const CHANGE_EMAIL = 'CHANGE_EMAIL';
 
+    /**
+     * @param string $action
+     */
     public static function saveAuthLog(string $action)
     {
         try {

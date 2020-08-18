@@ -23,6 +23,7 @@ class ArticlesListResource extends JsonResource
         ];
         $data['content'] = substr($this->content, 0, 150);
         $data['c_comments'] = $this->comments()->count();
+        $data['is_promo'] = $this->is_promo;
         return $data;
     }
 }

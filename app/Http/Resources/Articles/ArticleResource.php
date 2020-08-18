@@ -27,6 +27,7 @@ class ArticleResource extends JsonResource
         $data['like_down'] = count($this->likes->where('like', 0));
         $data['ratings'] = RatingArticleRepository::getAverageRatings($this->id);
         $data['c_comments'] = $this->comments->count();
+        $data['is_promo'] = $this->is_promo;
         return $data;
     }
 }
