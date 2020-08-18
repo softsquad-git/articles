@@ -7,7 +7,8 @@ use App\Http\Requests\Auth\ForgotPasswordRequest;
 use App\Http\Requests\Auth\SendVerifyKeyForgotPasswordRequest;
 use App\Repositories\Auth\ForgotPasswordRepository;
 use App\Services\Auth\ForgotPasswordService;
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use \Exception;
 
 class ForgotPasswordController extends Controller
 {
@@ -21,6 +22,10 @@ class ForgotPasswordController extends Controller
      */
     private $forgotPasswordService;
 
+    /**
+     * @param ForgotPasswordService $forgotPasswordService
+     * @param ForgotPasswordRepository $forgotPasswordRepository
+     */
     public function __construct(
         ForgotPasswordService $forgotPasswordService,
         ForgotPasswordRepository $forgotPasswordRepository
@@ -30,23 +35,28 @@ class ForgotPasswordController extends Controller
         $this->forgotPasswordService = $forgotPasswordService;
     }
 
-    public function sendKeyVerify(SendVerifyKeyForgotPasswordRequest $request)
+    public function sendKeyVerify(SendVerifyKeyForgotPasswordRequest $request): JsonResponse
     {
         try {
             $this->forgotPasswordService->sendVerifyKey($request->all());
-            return response()->json(['success' => 1]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+            return $this->successResponse();
+        } catch (Exception $e) {
+            return $this->catchResponse($e);
         }
     }
 
-    public function newPassword(ForgotPasswordRequest $request)
+    /**
+     * @param ForgotPasswordRequest $request
+     * @return JsonResponse
+     * @throws \Exception
+     */
+    public function newPassword(ForgotPasswordRequest $request): JsonResponse
     {
         try {
             $this->forgotPasswordService->newPassword($request->all());
-            return response()->json(['success' => 1]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+            return $this->successResponse();
+        } catch (Exception $e) {
+            return $this->catchResponse($e);
         }
     }
 }

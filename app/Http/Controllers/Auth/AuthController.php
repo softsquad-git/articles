@@ -8,18 +8,23 @@ use App\Http\Requests\Auth\ActivateRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Services\Auth\AuthService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use \Exception;
 
 class AuthController extends Controller
 {
     /**
-     * @var $service
+     * @var AuthService
      */
-    private $service;
+    private $authService;
 
-    public function __construct(AuthService $service)
+    /**
+     * @param AuthService $authService
+     */
+    public function __construct(AuthService $authService)
     {
-        $this->service = $service;
+        $this->authService = $authService;
     }
 
     public function register(RegisterRequest $request)
@@ -39,15 +44,18 @@ class AuthController extends Controller
             'sex',
             'terms'
         ]);
-        $item = $this->service->register($userData, $dataSpecificUser);
-
-        return response()->json([
-            'item' => $item,
-            'success' => 1
-        ]);
+        $item = $this->authService->register($userData, $dataSpecificUser);
+        /** TODO
+         * wysłać email z linkiem potwierdzjącym
+         */
+        return $this->successResponse();
     }
 
-    public function login(LoginRequest $request)
+    /**
+     * @param LoginRequest $request
+     * @return JsonResponse
+     */
+    public function login(LoginRequest $request): JsonResponse
     {
         $credentials = $request->only(['email', 'password']);
         if (!$token = Auth::attempt($credentials)) {
@@ -57,7 +65,11 @@ class AuthController extends Controller
         return $this->respondWithToken($token);
     }
 
-    private function respondWithToken($token)
+    /**
+     * @param $token
+     * @return JsonResponse
+     */
+    private function respondWithToken($token): JsonResponse
     {
         return response()->json([
             'access_token' => $token,
@@ -69,46 +81,56 @@ class AuthController extends Controller
         ]);
     }
 
-    public function logout()
+    /**
+     * @return JsonResponse
+     */
+    public function logout(): JsonResponse
     {
         try {
             Auth::guard('api')->logout();
             Logs::saveAuthLog(Logs::LOGOUT);
-            return response()->json([
-                'success' => 1,
-                'msg' => 'Logout'
-            ]);
-        }catch (\Exception $e){
-            return response()->json($e->getMessage());
+            return $this->successResponse();
+        }catch (Exception $e){
+            return $this->catchResponse($e);
         }
     }
 
-    public function refreshToken()
+    /**
+     * @return JsonResponse
+     */
+    public function refreshToken(): JsonResponse
     {
         try {
             return $this->respondWithToken(Auth::guard('api')->refresh());
-        } catch (\Exception $e){
-            return response()->json($e->getMessage());
+        } catch (Exception $e){
+            return $this->catchResponse($e);
         }
     }
 
-    public function activate(ActivateRequest $request)
+    /**
+     * @param ActivateRequest $request
+     * @return JsonResponse
+     */
+    public function activate(ActivateRequest $request): JsonResponse
     {
         try {
-            $this->service->activate($request->all());
-            return response()->json(['success' => 1]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+            $this->authService->activate($request->all());
+            return $this->successResponse();
+        } catch (Exception $e) {
+            return $this->catchResponse($e);
         }
     }
 
-    public function refreshKeyActivate()
+    /**
+     * @return JsonResponse
+     */
+    public function refreshKeyActivate(): JsonResponse
     {
         try {
-            $this->service->refreshKeyActivate();
-            return response()->json(['success' => 1]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => 0, 'msg' => $e->getMessage()]);
+            $this->authService->refreshKeyActivate();
+            return $this->successResponse();
+        } catch (Exception $e) {
+            return $this->catchResponse($e);
         }
     }
 }

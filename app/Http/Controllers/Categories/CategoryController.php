@@ -18,7 +18,6 @@ class CategoryController extends Controller
      */
     private $categoryRepository;
 
-
     /**
      * @param CategoryRepository $categoryRepository
      */
@@ -70,10 +69,7 @@ class CategoryController extends Controller
             ];
             return ArticlesListResource::collection($this->categoryRepository->articlesInCategory($alias, $params));
         } catch (Exception $e) {
-            return response()->json([
-                'success' => 0,
-                'msg' => $e->getMessage()
-            ]);
+            return $this->catchResponse($e);
         }
     }
 }
