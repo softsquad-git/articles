@@ -5,6 +5,10 @@ include 'api/front.api.php';
 include 'api/user.api.php';
 include 'api/admin.api.php';
 
+Route::any('(.*)', function () {
+    return redirect(config('app.url'));
+});
+
 Route::post('Categories', 'Categories\CategoryController@items');
 
 /**TODO
