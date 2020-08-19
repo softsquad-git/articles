@@ -44,10 +44,7 @@ class AuthController extends Controller
             'sex',
             'terms'
         ]);
-        $item = $this->authService->register($userData, $dataSpecificUser);
-        /** TODO
-         * wysłać email z linkiem potwierdzjącym
-         */
+        $this->authService->register($userData, $dataSpecificUser);
         return $this->successResponse();
     }
 
@@ -64,6 +61,7 @@ class AuthController extends Controller
         Logs::saveAuthLog(Logs::LOGIN);
         return $this->respondWithToken($token);
     }
+
 
     /**
      * @param $token
