@@ -88,7 +88,7 @@ class SettingService
     public function updateAvatar($avatar)
     {
         $user_avatar = $this->settingRepository->findAvatarUser();
-        $fileName = Upload::singleFile(Avatar::PATH, $avatar);
+        $fileName = Upload::singleFile(config('app.enum.defaults.paths.avatar'), $avatar);
         if (!empty($user_avatar)) {
             $user_avatar->update([
                 'src' => $fileName
