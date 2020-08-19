@@ -75,7 +75,18 @@ class AuthController extends Controller
             'expires_in' => auth('api')->factory()->getTTL() * 60,
             'user_id' => Auth::id(),
             'success' => 1,
-            'dark_mode' => Auth::user()->dark_mode == 1 ? true : false
+            'dark_mode' => Auth::user()->dark_mode == 1 ? true : false,
+            'activated' => Auth::user()->activated
+        ]);
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    public function isActivatedAccount(): JsonResponse
+    {
+        return response()->json([
+            'data' => Auth::user()->activated
         ]);
     }
 
