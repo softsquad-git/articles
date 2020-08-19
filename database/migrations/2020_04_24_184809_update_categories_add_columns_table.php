@@ -13,7 +13,7 @@ class UpdateCategoriesAddColumnsTable extends Migration
      */
     public function up()
     {
-        Schema::table('Categories', function (Blueprint $table) {
+        Schema::table('categories', function (Blueprint $table) {
             $table->integer('status')->default(1);
             $table->string('icon')->nullable();
         });
@@ -26,7 +26,7 @@ class UpdateCategoriesAddColumnsTable extends Migration
      */
     public function down()
     {
-        Schema::table('Categories', function (Blueprint $table) {
+        Schema::table('categories', function (Blueprint $table) {
             //
         });
     }
