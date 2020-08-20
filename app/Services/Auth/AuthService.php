@@ -8,7 +8,7 @@ use App\Helpers\VerifyEmail;
 use App\Models\Users\SpecificData;
 use App\Repositories\User\UserRepository;
 use App\User;
-use Illuminate\Support\Facades\Auth;
+use \Exception;
 use Illuminate\Support\Facades\Hash;
 
 class AuthService
@@ -45,7 +45,7 @@ class AuthService
     /**
      * @param array $data
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     public function activate(array $data)
     {
@@ -54,18 +54,19 @@ class AuthService
             UpdateStatusUser::setActivateUser(1);
             return true;
         }
-        throw new \Exception('Entered key invalid');
+        throw new Exception('Entered key invalid');
     }
 
     /**
-     * @return mixed|string
+     * @return mixed
+     * @throws Exception
      */
     public function refreshKeyActivate()
     {
         try {
             return VerifyEmail::updateKey();
-        } catch (\Exception $e) {
-            throw new \Exception($e->getMessage());
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
         }
     }
 

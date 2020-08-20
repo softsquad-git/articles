@@ -7,15 +7,24 @@ use App\Models\Users\VerificationEmail;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use \Exception;
 
 class VerifyEmail
 {
 
-    public static function generateKey()
+    /**
+     * @return string
+     */
+    public static function generateKey(): string
     {
         return substr(md5(time() . date('Y-m-d H:i:s')), 15, 15);
     }
 
+    /**
+     * @param int $userId
+     * @param string $key
+     * @return array
+     */
     private static function prepareData(int $userId, string $key): array
     {
         return [
@@ -26,10 +35,10 @@ class VerifyEmail
     }
 
     /**
-     * @param $userId
+     * @param int $userId
      * @return mixed
      */
-    public static function verify($userId)
+    public static function verify(int $userId)
     {
         $key = self::generateKey();
         $keyDB = self::getKey();
@@ -55,10 +64,10 @@ class VerifyEmail
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @return bool
      */
-    private static function removeKey($id)
+    private static function removeKey(int $id)
     {
         $key = VerificationEmail::find($id);
         $key->delete();
@@ -67,18 +76,16 @@ class VerifyEmail
     }
 
     /**
-     * @param $key
-     * @param $user_id
+     * @param string $key
+     * @param int $user_id
      * @return mixed
      */
-    private static function saveKeyInToDb($key, $user_id)
+    private static function saveKeyInToDb(string $key, int $user_id)
     {
-        $item = VerificationEmail::create([
+        return VerificationEmail::create([
             'user_id' => $user_id,
             '_key' => $key
         ]);
-
-        return $item;
     }
 
     /**
@@ -115,18 +122,20 @@ class VerifyEmail
 
     /**
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public static function updateKey()
     {
         $key = self::getKey();
-        if (empty($key))
-            throw new \Exception('ERROR');
         $newKey = self::generateKey();
-        VerificationEmail::where('id', $key->id)
-            ->update([
-                '_key' => $newKey
-            ]);
+        if (!empty($key)) {
+            VerificationEmail::where('id', $key->id)
+                ->update([
+                    '_key' => $newKey
+                ]);
+        } else {
+            self::saveKeyInToDb($newKey, Auth::id());
+        }
         return self::sendEmailVerify(self::prepareData(Auth::id(), $newKey));
     }
 

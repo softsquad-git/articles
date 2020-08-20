@@ -241,6 +241,7 @@ return [
             'paths' => [
                 'avatar' => 'assets/data/avatars/'
             ]
-        ]
+        ],
+        'status_code_no_activate' => 'NO_ACTIVATED'
     ]
 ];
