@@ -42,7 +42,6 @@ class Kernel extends HttpKernel
         'api' => [
            // 'throttle:60,1',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            'restrictIp' => \App\Http\Middleware\IpMiddleware::class,
         ],
     ];
 
@@ -66,5 +65,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'activated' => ActivatedAccount::class,
         'admin' => Middleware\AdminAccount::class,
+        'restrict.ip' => Middleware\IpMiddleware::class
     ];
 }

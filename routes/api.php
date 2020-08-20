@@ -1,6 +1,6 @@
 <?php
 
-Route::middleware(['restrictIp'])->group(function () {
+Route::middleware(['middleware' => 'restrict.ip'])->group(function () {
     include 'api/auth.api.php';
     include 'api/front.api.php';
     include 'api/user.api.php';
